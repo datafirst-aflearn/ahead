@@ -2,7 +2,7 @@
 title: "AHEAD"
 format:
   html:
-    self-contained: false
+    self-contained: true
     output-file: index.html
     toc: false
     theme: none
