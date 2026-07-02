@@ -2,7 +2,7 @@
 title: "AHEAD"
 format:
   html:
-    self-contained: true
+    self-contained: false
     output-file: index.html
     toc: false
     theme: none
@@ -55,9 +55,10 @@ dir.create(STUDIES_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(PUBLISH_DIR, recursive = TRUE, showWarnings = FALSE)
 
 AFLEARN_LOGO_PATH <- "AFLEARN logo transparent.png"
-invisible(file.copy(AFLEARN_LOGO_PATH, file.path(PUBLISH_DIR, "favicon.png"), overwrite = TRUE))
+DATAFIRST_LOGO_PATH <- "DataFirst and UCT logo.png"
+publish_site_logos(PUBLISH_DIR, AFLEARN_LOGO_PATH, DATAFIRST_LOGO_PATH)
 
-HARMONISED_DATA_URL <- "https://www.datafirst.uct.ac.za/dataportal/index.php"
+HARMONISED_DATA_URL <- "https://doi.org/10.25828/2287-mw84"
 AF_NAVY_L1 <- "#080056"  # logo bar (darkest layer)
 AF_NAVY_L2 <- "#100A78"  # header / hero (lighter navy)
 AF_NAVY    <- "#06003E"  # body text / accents
@@ -458,11 +459,10 @@ search_box <- div(
 ```
 
 ```{r header}
-aflearn_logo <- knitr::image_uri(AFLEARN_LOGO_PATH)
-
 div(
   div(class = "af-logobar",
-    tags$img(src = aflearn_logo, class = "af-logo-aflearn", alt = "AFLearn DataHub")
+    tags$img(src = AFLEARN_LOGO_FILE, class = "af-logo-aflearn", alt = "AFLearn DataHub"),
+    tags$img(src = DATAFIRST_LOGO_FILE, class = "af-logo-datafirst", alt = "DataFirst, University of Cape Town")
   ),
   div(class = "af-header",
     div(class = "af-header-inner",
@@ -681,11 +681,9 @@ div(
 ```
 
 ```{r generate-study-pages}
-study_logo <- knitr::image_uri(AFLEARN_LOGO_PATH)
 write_study_detail_pages(
   browse_base, subtask_desc, va_matrix,
   studies_dir = STUDIES_DIR,
-  logo_uri = study_logo,
   file_cell = file_cell,
   link_pill = link_pill,
   study_type_label = study_type_label,
@@ -723,10 +721,12 @@ body {
 .af-logobar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0.85rem 2rem;
   background: #080056;
 }
-.af-logo-aflearn {
+.af-logo-aflearn,
+.af-logo-datafirst {
   height: 96px;
   width: auto;
   max-width: 320px;
@@ -747,7 +747,7 @@ body {
 }
 .af-brand    { display: flex; flex-direction: column; gap: 0.25rem; }
 .af-page-title { font-size: 2.5rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.04em; line-height: 1.1; }
-.af-subtitle { font-size: 1.05rem; font-weight: 400; color: #94A3B8; }
+.af-subtitle { font-size: 1.35rem; font-weight: 500; color: #CBD5E1; line-height: 1.35; }
 .af-header-actions {
   display: flex; flex-direction: column; align-items: flex-end; gap: 0.65rem;
 }
@@ -763,9 +763,9 @@ body {
 .af-meta     { display: flex; flex-direction: column; align-items: flex-end; gap: 0.15rem; }
 .af-meta-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.09em; color: #64748B; }
 .af-meta-value { font-size: 0.9rem; font-weight: 500; color: #94A3B8; }
-.af-description { font-size: 1rem; color: #94A3B8; line-height: 1.65; margin: 0; max-width: 85ch; }
+.af-description { font-size: 1.2rem; color: #94A3B8; line-height: 1.65; margin: 0; max-width: 85ch; }
 .af-stats {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #CBD5E1;
   line-height: 1.65;
   margin: 0.75rem 0 0;
@@ -1064,7 +1064,8 @@ body {
     border-right: none;
     border-bottom: 1px solid #E5E7EB;
   }
-  .af-logo-aflearn { height: 72px; max-width: 260px; }
+  .af-logo-aflearn,
+  .af-logo-datafirst { height: 72px; max-width: 260px; }
 }
 </style>
 

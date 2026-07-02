@@ -2,6 +2,9 @@
 
 AHEAD_FOOTER_LABEL <- "AHEAD \u2014 African Harmonised Early-Grade Assessments Data"
 
+AFLEARN_LOGO_FILE <- "aflearn-logo.png"
+DATAFIRST_LOGO_FILE <- "datafirst-uct-logo.png"
+
 AF_COUNTRY_SLUG <- c(
   CD = "drc",
   DJ = "djibouti",
@@ -75,8 +78,20 @@ study_index_url <- function(study_slug) {
   paste0(paste(rep("..", n_up), collapse = "/"), "/index.html")
 }
 
+study_asset_url <- function(study_slug, filename) {
+  n_up <- length(strsplit(study_slug, "/", fixed = TRUE)[[1]])
+  paste0(paste(rep("..", n_up), collapse = "/"), "/", filename)
+}
+
 study_favicon_url <- function(study_slug) {
-  sub("index.html$", "favicon.png", study_index_url(study_slug))
+  study_asset_url(study_slug, "favicon.png")
+}
+
+publish_site_logos <- function(publish_dir, aflearn_src, datafirst_src) {
+  dir.create(publish_dir, recursive = TRUE, showWarnings = FALSE)
+  invisible(file.copy(aflearn_src, file.path(publish_dir, AFLEARN_LOGO_FILE), overwrite = TRUE))
+  invisible(file.copy(datafirst_src, file.path(publish_dir, DATAFIRST_LOGO_FILE), overwrite = TRUE))
+  invisible(file.copy(aflearn_src, file.path(publish_dir, "favicon.png"), overwrite = TRUE))
 }
 
 # ── Country-name normalisation (linking sheet uses free-text country names) ───
@@ -1196,9 +1211,11 @@ sampling_design_html <- function(svyset) {
 }
 
 build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_lookup,
-                                    index_url, logo_uri, datafirst_logo_uri,
+                                    index_url,
                                     file_cell, link_pill, study_type_label,
                                     link_info = NULL) {
+  aflearn_logo_src <- study_asset_url(row$study_slug, AFLEARN_LOGO_FILE)
+  datafirst_logo_src <- study_asset_url(row$study_slug, DATAFIRST_LOGO_FILE)
   subtask_items <- lapply(present_task_ids, function(task_id) {
     title <- task_label(task_id, desc_lookup, copy_lookup)
     body  <- task_description(task_id, copy_lookup)
@@ -1247,8 +1264,8 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
     tags$body(
       tags$div(
         class = "af-logobar",
-        tags$a(href = index_url, tags$img(src = logo_uri, class = "af-logo-aflearn", alt = "AFLearn DataHub")),
-        tags$img(src = datafirst_logo_uri, class = "af-logo-datafirst", alt = "DataFirst, University of Cape Town")
+        tags$a(href = index_url, tags$img(src = aflearn_logo_src, class = "af-logo-aflearn", alt = "AFLearn DataHub")),
+        tags$img(src = datafirst_logo_src, class = "af-logo-datafirst", alt = "DataFirst, University of Cape Town")
       ),
       tags$div(
         class = "af-study-hero",
@@ -1388,7 +1405,7 @@ document.querySelectorAll('.af-copy-btn').forEach(function(btn) {
 }
 
 write_study_detail_pages <- function(browse_base, subtask_desc, va_matrix,
-                                     studies_dir, logo_uri, datafirst_logo_uri,
+                                     studies_dir,
                                      file_cell, link_pill, study_type_label,
                                      linking_source = NULL) {
   copy_lookup <- egra_subtask_copy()
@@ -1405,7 +1422,7 @@ write_study_detail_pages <- function(browse_base, subtask_desc, va_matrix,
     link_info <- if (!is.null(linking_source)) find_link_info(linking_source, row) else NULL
     page <- build_study_detail_page(
       row, present_task_ids, subtask_desc, copy_lookup,
-      study_index_url(slug), logo_uri, datafirst_logo_uri,
+      study_index_url(slug),
       file_cell, link_pill, study_type_label,
       link_info = link_info
     )
