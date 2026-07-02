@@ -906,9 +906,13 @@ body {
   margin: 0; padding: 0;
 }
 .af-logobar {
-  display: flex; align-items: center; padding: 0.85rem 2rem; background: #080056;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.85rem 2rem; background: #080056;
 }
-.af-logo-aflearn { height: 96px; width: auto; max-width: 320px; object-fit: contain; }
+.af-logo-aflearn,
+.af-logo-datafirst {
+  height: 96px; width: auto; max-width: 320px; object-fit: contain; display: block;
+}
 .af-study-hero {
   background: #100A78; color: #fff; padding: 1.75rem 2rem 1.5rem;
   border-bottom: 3px solid #080056;
@@ -1050,7 +1054,8 @@ body {
 .af-copy-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
 @media (max-width: 900px) {
   .af-study-layout { grid-template-columns: 1fr; padding: 1.25rem 1rem 2rem; }
-  .af-logo-aflearn { height: 72px; }
+  .af-logo-aflearn,
+  .af-logo-datafirst { height: 72px; max-width: 260px; }
   .af-crosswalk-row { grid-template-columns: 1fr 24px 1fr; font-size: 0.8rem; }
 }
 </style>")
@@ -1191,7 +1196,7 @@ sampling_design_html <- function(svyset) {
 }
 
 build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_lookup,
-                                    index_url, logo_uri,
+                                    index_url, logo_uri, datafirst_logo_uri,
                                     file_cell, link_pill, study_type_label,
                                     link_info = NULL) {
   subtask_items <- lapply(present_task_ids, function(task_id) {
@@ -1242,7 +1247,8 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
     tags$body(
       tags$div(
         class = "af-logobar",
-        tags$a(href = index_url, tags$img(src = logo_uri, class = "af-logo-aflearn", alt = "AFLearn DataHub"))
+        tags$a(href = index_url, tags$img(src = logo_uri, class = "af-logo-aflearn", alt = "AFLearn DataHub")),
+        tags$img(src = datafirst_logo_uri, class = "af-logo-datafirst", alt = "DataFirst, University of Cape Town")
       ),
       tags$div(
         class = "af-study-hero",
@@ -1382,7 +1388,7 @@ document.querySelectorAll('.af-copy-btn').forEach(function(btn) {
 }
 
 write_study_detail_pages <- function(browse_base, subtask_desc, va_matrix,
-                                     studies_dir, logo_uri,
+                                     studies_dir, logo_uri, datafirst_logo_uri,
                                      file_cell, link_pill, study_type_label,
                                      linking_source = NULL) {
   copy_lookup <- egra_subtask_copy()
@@ -1399,7 +1405,7 @@ write_study_detail_pages <- function(browse_base, subtask_desc, va_matrix,
     link_info <- if (!is.null(linking_source)) find_link_info(linking_source, row) else NULL
     page <- build_study_detail_page(
       row, present_task_ids, subtask_desc, copy_lookup,
-      study_index_url(slug), logo_uri,
+      study_index_url(slug), logo_uri, datafirst_logo_uri,
       file_cell, link_pill, study_type_label,
       link_info = link_info
     )
