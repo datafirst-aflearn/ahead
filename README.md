@@ -1,4 +1,4 @@
-# AFLearn EGRA/EGMA dataset reference site
+# AHEAD Catalogue
 
 Interactive study-round browser and detail pages, built with **Quarto + reactable**.  
 Published output for GitHub Pages lives in **`docs/`**.
