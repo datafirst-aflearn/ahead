@@ -27,10 +27,11 @@ quarto::quarto_render("aflearn_dataset_reference_5.qmd", quiet = FALSE)
 
 writeLines("", file.path(publish_dir, ".nojekyll"))
 
-n_studies <- length(list.files(studies_dir, pattern = "\\.html$"))
+n_studies <- length(list.files(studies_dir, pattern = "\\.html$", recursive = TRUE))
 message(
   "\nDone. Published files:\n",
-  "  ", file.path(publish_dir, "index.html"), "\n",
+  "  ", file.path(publish_dir, "index.html"), " (landing page)\n",
+  "  ", file.path(publish_dir, "catalogue.html"), " (browse catalogue)\n",
   "  ", studies_dir, "/ (", n_studies, " study pages)\n",
   "\nNext: git add docs/ && git commit && git push\n",
   "GitHub repo Settings → Pages → Build from branch main, folder /docs"

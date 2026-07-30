@@ -3,7 +3,7 @@ title: "AHEAD"
 format:
   html:
     self-contained: true
-    output-file: index.html
+    output-file: catalogue.html
     toc: false
     theme: none
     include-in-header:
@@ -34,25 +34,30 @@ source("aflearn_study_pages.R")
 
 `%||%` <- function(x, y) if (is.null(x) || length(x) == 0 || (length(x) == 1 && is.na(x))) y else x
 
-EXCEL_CANDIDATES <- c(
+# Primary catalogue (home page, projects, surveys, subtasks, sampling, linking)
+CATALOGUE_CANDIDATES <- c(
+  "ahead-catalogue-v1.xlsx",
+  file.path("data", "ahead-catalogue-v1.xlsx")
+)
+EXCEL_PATH <- CATALOGUE_CANDIDATES[file.exists(CATALOGUE_CANDIDATES)][1]
+if (is.na(EXCEL_PATH)) {
+  stop("ahead-catalogue-v1.xlsx not found in project root or data/.")
+}
+
+# Legacy workbook: still used only for per-survey grade (new catalogue lacks a grade column)
+GRADES_CANDIDATES <- c(
   "EGRA_Harmonization_Waves_Details.xlsx",
   file.path("data", "EGRA_Harmonization_Waves_Details.xlsx")
 )
-EXCEL_PATH <- EXCEL_CANDIDATES[file.exists(EXCEL_CANDIDATES)][1]
-
-VA_CANDIDATES <- c(
-  "variable-availability-matrix.xlsx",
-  file.path("data", "variable-availability-matrix.xlsx")
-)
-VA_PATH <- VA_CANDIDATES[file.exists(VA_CANDIDATES)][1]
-if (is.na(VA_PATH)) {
-  stop("variable-availability-matrix.xlsx not found in project root or data/.")
-}
+GRADES_PATH <- GRADES_CANDIDATES[file.exists(GRADES_CANDIDATES)][1]
 
 PUBLISH_DIR <- Sys.getenv("AFLEARN_PUBLISH_DIR", unset = "docs")
 STUDIES_DIR <- file.path(PUBLISH_DIR, "studies")
 dir.create(STUDIES_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(PUBLISH_DIR, recursive = TRUE, showWarnings = FALSE)
+
+home_meta <- load_home_page(EXCEL_PATH)
+sampling_lookup <- load_sampling_description(EXCEL_PATH)
 
 AFLEARN_LOGO_PATH <- "AFLEARN logo transparent.png"
 DATAFIRST_LOGO_PATH <- "DataFirst and UCT logo.png"
@@ -68,11 +73,16 @@ AF_BLUE    <- "#1B6FD8"
 format_grades <- function(sheet_val, file_val = NA_character_) {
   if (!is.na(sheet_val) && sheet_val != "") {
     val <- tolower(trimws(as.character(sheet_val)))
+    # "g3 & g5" / "g1,g2,g3" style
     m <- str_match_all(val, "g(\\d+)")[[1]]
     if (nrow(m) > 0) {
       nums <- sort(unique(as.integer(m[, 2])))
       return(paste(nums, collapse = ", "))
     }
+    # "3,5" / "2,3,4" project-level style
+    nums2 <- suppressWarnings(as.integer(unlist(str_split(val, "[,\\s&]+"))))
+    nums2 <- sort(unique(nums2[!is.na(nums2)]))
+    if (length(nums2) > 0) return(paste(nums2, collapse = ", "))
   }
   from_file <- grades_from_filename(file_val)
   if (!is.na(from_file) && from_file != "") {
@@ -100,10 +110,16 @@ normalize_grades <- function(...) {
   paste(nums, collapse = ", ")
 }
 
+grade_filter_label <- function(grade_num) {
+  if (is.na(grade_num) || grade_num == "" || grade_num == "—") return("—")
+  paste("Grade", trimws(as.character(grade_num)))
+}
+
 study_type_label <- function(val) {
   switch(val,
     cross_sectional = "Cross-sectional",
     school_panel    = "School panel",
+    pupil_panel     = "Pupil panel",
     unknown         = "Unknown",
     ifelse(is.na(val) || val == "", "Unknown", val)
   )
@@ -118,7 +134,8 @@ datalumos_urls <- c(
   "LR_001" = "https://www.datalumos.org/datalumos/project/237226/version/V1/view?path=/datalumos/237226/fcr:versions/V1/Liberia/EGRA-Plus&type=folder",
   "MW_001" = "https://www.datalumos.org/datalumos/project/237426/version/V1/view?path=/datalumos/237426/fcr:versions/V1/Malawi/Malawi-Teacher-Professional-Development-Support--MTPDS----Intervention-Study/MTPDS&type=folder",
   "RW_002" = "https://www.datalumos.org/datalumos/project/237672/version/V1/view?path=/datalumos/237672/fcr:versions/V1/Rwanda/Soma-Umenye--Read-to-Know-&type=folder",
-  "RW_003" = "https://www.datalumos.org/datalumos/project/237672/version/V1/view?path=/datalumos/237672/fcr:versions/V1/Rwanda/The-Literacy-Language-and-Learning-Initiative--L3-&type=folder"
+  "RW_003" = "https://www.datalumos.org/datalumos/project/237672/version/V1/view?path=/datalumos/237672/fcr:versions/V1/Rwanda/The-Literacy-Language-and-Learning-Initiative--L3-&type=folder",
+  "UG_001" = "https://www.datalumos.org/datalumos/project/237643/version/V1/view?path=/datalumos/237643/fcr:versions/V1/Uganda/LARA/LARA&type=folder"
 )
 
 # ── Data file URLs keyed on source identifier ──────────────────────────────────
@@ -153,61 +170,130 @@ codebook_urls <- c(
   "rwanda_2016"   = "https://www.datalumos.org/datalumos/project/237672/version/V1/view?path=/datalumos/237672/fcr:versions/V1/Rwanda/The-Literacy-Language-and-Learning-Initiative--L3-/Codebooks/DataProfile_Rwanda_L3_Endline.pdf&type=file"
 )
 
-# ── Read projects sheet ────────────────────────────────────────────────────────
-projects <- read_excel(EXCEL_PATH, sheet = "Project description") |>
+clean_na_text <- function(x) {
+  x <- trimws(as.character(x))
+  ifelse(is.na(x) | x == "" | toupper(x) %in% c("NA", "N/A"), NA_character_, x)
+}
+
+# ── Read projects sheet (about-the-program) ───────────────────────────────────
+projects_raw <- read_excel_sheet_any(EXCEL_PATH, c("about-the-program", "Project description"))
+names(projects_raw) <- clean_header_names(names(projects_raw))
+
+projects <- projects_raw |>
   filter(!is.na(country_iso) & country_iso != "") |>
-  rename(
-    Country      = Country,
-    ISO          = country_iso,
-    Project_Name = `Project Name`,
-    Acronym      = `Project Acronym`,
-    Code         = `Project Code`,
-    Description  = `Project Description`,
-    Sampling     = Sampling,
-    Study_Type   = study_type,
-    Study_Design = study_design,
-    Harmonised_ID = `2026 EGRA Harmonisation`
-  ) |>
   mutate(
-    Code      = str_pad(as.character(Code), 3, pad = "0"),
-    proj_key  = paste0(ISO, "_", Code),
-    DataLumos = datalumos_urls[proj_key]
+    Country       = Country,
+    ISO           = normalize_iso_code(country_iso),
+    Project_Name  = clean_na_text(`Project Name`),
+    Acronym       = clean_na_text(`Project Acronym`),
+    Code          = str_pad(as.character(`Project Code`), 3, pad = "0"),
+    Description   = clean_na_text(`Project Description`),
+    Project_Grades = `Grade(s)`,
+    Project_Languages = `Language(s)`,
+    Study_Type    = `Study Type`,
+    Study_Design  = `Study Design`,
+    Assessment    = Assessment,
+    Harmonised_ID = `2026 EGRA Harmonisation`,
+    proj_key      = paste0(ISO, "_", Code),
+    DataLumos     = datalumos_urls[proj_key]
+  ) |>
+  select(
+    Country, ISO, Project_Name, Acronym, Code, Description, Project_Grades,
+    Project_Languages, Study_Type, Study_Design, Assessment, Harmonised_ID,
+    proj_key, DataLumos
   )
 
-# ── Read study rounds sheet (sheet was renamed; accept either name) ───────────
-rounds_raw <- read_excel_sheet_any(EXCEL_PATH, c("Study_rounds", "assessment-surveys"))
+# Join sampling prose onto projects
+projects <- projects |>
+  left_join(
+    sampling_lookup |> select(proj_key, Sampling),
+    by = "proj_key"
+  )
+
+# ── Per-survey grades from legacy workbook (preserves Rwanda g1/g2/g3 URLs) ───
+legacy_grades <- NULL
+if (!is.na(GRADES_PATH)) {
+  legacy_raw <- tryCatch(
+    read_excel_sheet_any(GRADES_PATH, c("assessment-surveys", "Study_rounds")),
+    error = function(e) NULL
+  )
+  if (!is.null(legacy_raw)) {
+    names(legacy_raw) <- clean_header_names(names(legacy_raw))
+    grade_col <- names(legacy_raw)[grep("^grade", names(legacy_raw), ignore.case = TRUE)][1]
+    legacy_grades <- legacy_raw |>
+      filter(!is.na(country_iso) & country_iso != "") |>
+      transmute(
+        ISO = normalize_iso_code(country_iso),
+        Code = str_pad(as.character(project), 3, pad = "0"),
+        Round = as.character(Round),
+        Year = as.character(data_collection_year),
+        Source = str_trim(as.character(source)),
+        Grade_legacy = .data[[grade_col]]
+      )
+  }
+}
+
+# ── Read study rounds sheet ───────────────────────────────────────────────────
+rounds_raw <- read_excel_sheet_any(EXCEL_PATH, c("assessment-surveys", "Study_rounds"))
+names(rounds_raw) <- clean_header_names(names(rounds_raw))
+
+# Language column may be "Language" or "Language "
+lang_col <- names(rounds_raw)[grep("^language", names(rounds_raw), ignore.case = TRUE)][1]
 
 rounds <- rounds_raw |>
   filter(!is.na(country_iso) & country_iso != "") |>
-  rename(
-    ISO           = country_iso,
-    Code          = project,
-    Round         = Round,
-    Year          = data_collection_year,
-    Grade_sheet   = grade,
+  mutate(
+    ISO           = normalize_iso_code(country_iso),
+    Code          = str_pad(as.character(project), 3, pad = "0"),
+    Round         = as.character(Round),
+    Year          = as.character(data_collection_year),
     Svyset        = svyset,
     RCT           = svy_rct,
     DataFile_text = datafile_location,
     Codebook_text = codebook_location,
-    Source        = source,
-    Language_raw  = Language,
-    Comments      = comments
-  ) |>
-  mutate(
-    Code          = str_pad(as.character(Code), 3, pad = "0"),
+    Source        = str_trim(as.character(source)),
+    Language_raw  = .data[[lang_col]],
+    Comments      = comments,
     proj_key      = paste0(ISO, "_", Code),
-    Year          = as.character(Year),
-    Round         = as.character(Round),
-    Source        = str_trim(Source),
     across(c(RCT, Comments), ~ifelse(is.na(.) | . == "", "—", .)),
     Svyset        = ifelse(is.na(Svyset) | Svyset == "", "— not specified —", Svyset),
     DataFile_text = str_trim(ifelse(is.na(DataFile_text) | DataFile_text == "", "—", DataFile_text)),
     Codebook_text = str_trim(ifelse(is.na(Codebook_text) | Codebook_text == "", "—", Codebook_text)),
     DataFile_url  = datafile_urls[Source],
     Codebook_url  = codebook_urls[Source],
-    Grades = mapply(format_grades, Grade_sheet, DataFile_text, USE.NAMES = FALSE),
-    Languages = format_languages(Language_raw)
+    Languages     = format_languages(Language_raw)
   )
+
+# Attach legacy per-survey grades (match on ISO+Code+Round+Year+Source when possible)
+if (!is.null(legacy_grades)) {
+  rounds <- rounds |>
+    left_join(
+      legacy_grades,
+      by = c("ISO", "Code", "Round", "Year", "Source")
+    )
+} else {
+  rounds$Grade_legacy <- NA_character_
+}
+
+# Fall back: join without Source for rows still missing (e.g. blank source)
+if (!is.null(legacy_grades)) {
+  still_missing <- is.na(rounds$Grade_legacy) | rounds$Grade_legacy == ""
+  if (any(still_missing)) {
+    legacy_nosrc <- legacy_grades |>
+      group_by(ISO, Code, Round, Year) |>
+      summarise(Grade_legacy2 = dplyr::first(Grade_legacy), .groups = "drop")
+    rounds <- rounds |>
+      left_join(legacy_nosrc, by = c("ISO", "Code", "Round", "Year")) |>
+      mutate(
+        Grade_legacy = ifelse(
+          is.na(Grade_legacy) | Grade_legacy == "",
+          Grade_legacy2,
+          Grade_legacy
+        )
+      ) |>
+      select(-Grade_legacy2)
+  }
+}
 
 file_mod     <- file.info(EXCEL_PATH)$mtime
 last_updated <- format(file_mod, "%d %B %Y, %H:%M")
@@ -217,8 +303,11 @@ browse_base <- rounds |>
   select(-ISO) |>
   left_join(
     projects |>
-      select(proj_key, Country, ISO, Project_Name, Acronym, Study_Type, Study_Design,
-             Description, Sampling, DataLumos, Harmonised_ID),
+      select(
+        proj_key, Country, ISO, Project_Name, Acronym, Study_Type, Study_Design,
+        Description, Sampling, DataLumos, Harmonised_ID, Assessment,
+        Project_Grades, Project_Languages
+      ),
     by = "proj_key"
   ) |>
   mutate(
@@ -228,6 +317,11 @@ browse_base <- rounds |>
       dplyr::recode(round_ISO, !!!as.list(AF_ISO_COUNTRY)),
       Country
     ),
+    Project_Name = if_else(
+      is.na(Project_Name) | Project_Name == "",
+      paste(Country, "assessment"),
+      Project_Name
+    ),
     Study_Name = if_else(
       !is.na(Acronym) & Acronym != "",
       paste0(Project_Name, " (", Acronym, ")"),
@@ -235,25 +329,36 @@ browse_base <- rounds |>
     ),
     Study_Type = ifelse(is.na(Study_Type) | Study_Type == "", "unknown", Study_Type),
     Study_Type_Label = vapply(Study_Type, study_type_label, character(1)),
-    Year = ifelse(is.na(Year) | Year == "" | Year == "`", "—", Year)
+    Year = ifelse(is.na(Year) | Year == "" | Year == "`", "—", Year),
+    # Prefer legacy per-survey grade; fall back to project Grade(s)
+    Grades = {
+      g <- mapply(format_grades, Grade_legacy, DataFile_text, USE.NAMES = FALSE)
+      ifelse(
+        g == "—" | is.na(g),
+        vapply(Project_Grades, function(pg) format_grades(pg, NA_character_), character(1)),
+        g
+      )
+    }
   ) |>
   select(-round_ISO)
 
 browse_base <- browse_base |>
   mutate(
-    base_slug = paste0(Source, "_", Code, "_r", Round)
+    base_slug = paste0(ifelse(is.na(Source) | Source == "", "survey", Source), "_", Code, "_r", Round)
   )
 
-subtask_desc <- load_subtask_desc(VA_PATH)
-va_matrix    <- load_va_matrix(VA_PATH)
+subtask_desc <- load_subtask_descriptions(EXCEL_PATH)
+va_matrix    <- load_subtask_availability(EXCEL_PATH, subtask_desc)
 linking_source <- load_linking_source(EXCEL_PATH)
 
 browse_base <- assign_study_url_slugs(browse_base)
-browse_base <- assign_matrix_col(browse_base)
+browse_base <- assign_survey_key(browse_base)
+# Keep matrix_col alias for any leftover call sites
+browse_base$matrix_col <- browse_base$survey_key
 browse_base <- browse_base |>
   mutate(
-    Subtasks = lapply(matrix_col, function(mc) {
-      study_present_labels(va_matrix, mc, subtask_desc)
+    Subtasks = lapply(survey_key, function(sk) {
+      study_present_labels(va_matrix, sk, subtask_desc)
     })
   )
 
@@ -262,16 +367,51 @@ browse_base <- browse_base |>
 browse_sd_data <- browse_base |>
   dplyr::select(-dplyr::any_of(c("study_slug", "Detail_url", "country_slug")))
 
+# Filter vocabularies from home-page sheet (display order)
+country_levels <- if (length(home_meta$countries)) home_meta$countries else sort(unique(as.character(browse_sd_data$Country)))
+year_levels <- if (length(home_meta$years)) as.character(home_meta$years) else sort(unique(as.character(browse_sd_data$Year)))
+grade_levels <- if (length(home_meta$grades)) home_meta$grades else {
+  paste("Grade", sort(unique(unlist(str_split(browse_base$Grades[browse_base$Grades != "—"], ",\\s*")))))
+}
+study_type_levels <- if (length(home_meta$study_types)) {
+  unique(vapply(home_meta$study_types, study_type_label, character(1)))
+} else {
+  unique(as.character(browse_sd_data$Study_Type_Label))
+}
+
+browse_sd_data <- browse_sd_data |>
+  mutate(
+    Country = factor(as.character(Country), levels = unique(c(country_levels, setdiff(as.character(Country), country_levels)))),
+    Year = factor(as.character(Year), levels = unique(c(year_levels, setdiff(as.character(Year), year_levels)))),
+    Study_Type_Label = factor(
+      as.character(Study_Type_Label),
+      levels = unique(c(study_type_levels, setdiff(as.character(Study_Type_Label), study_type_levels)))
+    ),
+    Assessment = ifelse(
+      is.na(Assessment) | Assessment == "" | toupper(trimws(as.character(Assessment))) %in% c("NA", "N/A"),
+      "—",
+      as.character(Assessment)
+    ),
+    Row_arrow = ""
+  )
+
+# Visible column order for reactable: Country, Year, Study Name, Grade(s), Assessment, arrow
+vis_cols <- c("Country", "Year", "Study_Name", "Grades", "Assessment", "Row_arrow")
+browse_sd_data <- browse_sd_data[, c(vis_cols, setdiff(names(browse_sd_data), vis_cols)), drop = FALSE]
+
 browse_filter <- browse_sd_data |>
   mutate(
     Grade = if_else(
       Grades == "—",
       list("—"),
-      as.list(str_split(Grades, ",\\s*"))
+      as.list(lapply(str_split(Grades, ",\\s*"), function(v) vapply(v, grade_filter_label, character(1))))
     )
   ) |>
   unnest_longer(Grade, keep_empty = TRUE) |>
-  mutate(Grade = ifelse(is.na(Grade), "—", as.character(Grade)))
+  mutate(
+    Grade = ifelse(is.na(Grade), "—", as.character(Grade)),
+    Grade = factor(Grade, levels = unique(c(grade_levels, setdiff(Grade, grade_levels))))
+  )
 
 browse_language_filter <- browse_sd_data |>
   mutate(
@@ -300,15 +440,30 @@ browse_filter_sd <- SharedData$new(browse_filter, key = ~study_key, group = "af_
 browse_language_filter_sd <- SharedData$new(browse_language_filter, key = ~study_key, group = "af_studies")
 browse_subtask_filter_sd <- SharedData$new(browse_subtask_filter, key = ~study_key, group = "af_studies")
 
-AHEAD_TITLE     <- "AHEAD"
-AHEAD_FULL_NAME <- "African Harmonised Early-Grade Assessments Data"
+AHEAD_TITLE     <- home_meta$heading %||% "AHEAD"
+AHEAD_FULL_NAME <- home_meta$subheading %||% "African Harmonised Early-Grade Assessments Data"
 AHEAD_FOOTER_LABEL <- paste0(AHEAD_TITLE, " \u2014 ", AHEAD_FULL_NAME)
-AHEAD_N_PERSONS <- "130 000"
+AHEAD_DESCRIPTION <- home_meta$description %||% ""
+AHEAD_N_COUNTRIES <- home_meta$n_countries %||% as.character(dplyr::n_distinct(browse_base$Country))
+AHEAD_N_PROJECTS  <- home_meta$n_projects %||% as.character(nrow(projects))
+AHEAD_N_SURVEYS   <- home_meta$n_surveys %||% as.character(nrow(browse_base))
+AHEAD_N_PERSONS   <- home_meta$n_persons %||% "—"
 
 n_countries <- dplyr::n_distinct(browse_base$Country)
+n_projects  <- nrow(projects)
 n_studies   <- nrow(browse_base)
-```
 
+# Build-time drift check against catalogue headline counts
+if (!is.na(home_meta$n_countries_raw) && home_meta$n_countries_raw != n_countries) {
+  warning(glue("home-page countries={home_meta$n_countries_raw} but loaded {n_countries}"), call. = FALSE)
+}
+if (!is.na(home_meta$n_projects_raw) && home_meta$n_projects_raw != n_projects) {
+  warning(glue("home-page projects={home_meta$n_projects_raw} but loaded {n_projects}"), call. = FALSE)
+}
+if (!is.na(home_meta$n_surveys_raw) && home_meta$n_surveys_raw != n_studies) {
+  warning(glue("home-page surveys={home_meta$n_surveys_raw} but loaded {n_studies}"), call. = FALSE)
+}
+```
 ```{r helpers}
 # ── Reusable header style: force no-wrap at the colDef level ──────────────────
 # This beats reactable's own inline styles, which CSS alone cannot override.
@@ -325,6 +480,7 @@ badge <- function(val, color_map) {
   txt <- switch(val,
     cross_sectional = "Cross-sectional",
     school_panel    = "School panel",
+    pupil_panel     = "Pupil panel",
     descriptive     = "Descriptive",
     pre_post        = "Pre/Post",
     rct             = "RCT",
@@ -338,7 +494,7 @@ badge <- function(val, color_map) {
   ))
 }
 
-type_colors   <- list(cross_sectional = AF_NAVY, school_panel = "#7C3AED", unknown = "#94A3B8")
+type_colors   <- list(cross_sectional = AF_NAVY, school_panel = "#7C3AED", pupil_panel = "#DB2777", unknown = "#94A3B8")
 design_colors <- list(descriptive = "#10B981", pre_post = "#F59E0B", rct = "#EF4444", unknown = "#94A3B8")
 
 # ── Truncated text with Read more toggle ───────────────────────────────────────
@@ -425,14 +581,14 @@ filter_accordion <- function(label, filter_id, shared, column) {
 }
 
 row_arrow_icon <- function() {
-  HTML(paste0(
+  paste0(
     '<svg class="af-row-arrow-svg" xmlns="http://www.w3.org/2000/svg" ',
     'width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">',
-    '<path d="M4 12h13" stroke="#1B6FD8" stroke-width="2.5" stroke-linecap="round"/>',
-    '<path d="M13 7l6 5-6 5" fill="#1B6FD8" stroke="#1B6FD8" ',
+    '<path d="M4 12h13" stroke="#C8892A" stroke-width="2.5" stroke-linecap="round"/>',
+    '<path d="M13 7l6 5-6 5" fill="#C8892A" stroke="#C8892A" ',
     'stroke-width="1.5" stroke-linejoin="round"/>',
     '</svg>'
-  ))
+  )
 }
 
 search_box <- div(
@@ -461,40 +617,24 @@ search_box <- div(
 ```{r header}
 div(
   div(class = "af-logobar",
-    tags$img(src = AFLEARN_LOGO_FILE, class = "af-logo-aflearn", alt = "AFLearn DataHub"),
+    tags$a(href = "index.html",
+      tags$img(src = AFLEARN_LOGO_FILE, class = "af-logo-aflearn", alt = "AFLearn DataHub")
+    ),
     tags$img(src = DATAFIRST_LOGO_FILE, class = "af-logo-datafirst", alt = "DataFirst, University of Cape Town")
   ),
-  div(class = "af-header",
-    div(class = "af-header-inner",
-      div(class = "af-brand",
-        span(AHEAD_TITLE, class = "af-page-title"),
-        span(AHEAD_FULL_NAME, class = "af-subtitle")
+  div(class = "af-subnav",
+    tags$a(class = "af-back-link", href = "index.html", "\u2190 Home"),
+    div(class = "af-subnav-actions",
+      tags$a(
+        href = HARMONISED_DATA_URL,
+        target = "_blank",
+        class = "af-cta-btn",
+        "Access AHEAD dataset"
       ),
-      div(class = "af-header-actions",
-        tags$a(
-          href = HARMONISED_DATA_URL,
-          target = "_blank",
-          class = "af-cta-btn",
-          "Access AHEAD dataset"
-        ),
-        div(class = "af-meta",
-          span("Source file last updated", class = "af-meta-label"),
-          span(last_updated, class = "af-meta-value")
-        )
+      div(class = "af-meta",
+        span("Source file last updated", class = "af-meta-label"),
+        span(last_updated, class = "af-meta-value")
       )
-    ),
-    p(class = "af-description",
-      "AHEAD is dedicated to providing open access to early-grade reading and ",
-      "mathematics assessments from across Africa. The project aims to preserve ",
-      "foundational-learning data and documentation, harmonise foundational-learning ",
-      "data, and disseminate data free of charge."
-    ),
-    p(class = "af-stats",
-      tags$strong(glue("{n_countries} countries")),
-      " \u00b7 ",
-      tags$strong(glue("{n_studies} early-grade assessment surveys")),
-      " \u00b7 ",
-      tags$strong(glue("over {AHEAD_N_PERSONS} person records"))
     )
   )
 )
@@ -535,42 +675,77 @@ browse_table <- reactable(
 
   columns = list(
     Country = colDef(
-      name = "Country", minWidth = 200, show = TRUE,
-      headerStyle = HDR_STYLE,
+      name = "Country", width = 320, minWidth = 320, maxWidth = 320, show = TRUE,
+      headerStyle = c(HDR_STYLE, list(flex = "0 0 320px")),
+      style = list(flex = "0 0 320px", whiteSpace = "nowrap", overflow = "visible"),
       cell = function(value, index) {
         iso <- browse_base[index, "ISO", drop = TRUE]
         country_cell(value, iso)
       }
     ),
     Year = colDef(
-      name = "Year", width = 100, minWidth = 100, align = "center", show = TRUE,
-      headerStyle = c(HDR_STYLE, list(minWidth = "100px", width = "100px")),
+      name = "Year", width = 80, minWidth = 80, maxWidth = 80, align = "left", show = TRUE,
+      headerStyle = c(HDR_STYLE, list(flex = "0 0 80px", minWidth = "80px", width = "80px")),
       style = list(
+        flex = "0 0 80px",
         color = AF_NAVY, fontWeight = "700",
         whiteSpace = "nowrap", fontVariantNumeric = "tabular-nums"
       )
     ),
     Study_Name = colDef(
-      name = "Study name", minWidth = 280, show = TRUE,
+      name = "Study name", width = 460, minWidth = 460, maxWidth = 460, show = TRUE,
       html = TRUE,
-      headerStyle = HDR_STYLE,
+      # Fixed width: enough for one-line names, no flex-grow gap before Grade(s)
+      headerStyle = c(HDR_STYLE, list(flex = "0 0 460px", minWidth = "460px", width = "460px")),
+      style = list(
+        flex = "0 0 460px",
+        minWidth = "460px",
+        width = "460px",
+        whiteSpace = "nowrap",
+        overflow = "visible"
+      ),
       cell = function(value, index) {
         href <- browse_base$Detail_url[[index]]
         paste0(
           '<a href="', htmltools::htmlEscape(href), '" class="af-study-link" ',
-          'style="color:#374151;text-decoration:none;">',
+          'style="color:#374151;text-decoration:none;white-space:nowrap;">',
           htmltools::htmlEscape(value), "</a>"
         )
       }
     ),
     Grades = colDef(
-      name = "Grade(s)", width = 130, minWidth = 130, align = "center", show = TRUE,
-      headerStyle = c(HDR_STYLE, list(minWidth = "130px", width = "130px")),
-      style = list(whiteSpace = "nowrap"),
+      name = "Grade(s)", width = 120, minWidth = 120, maxWidth = 120, align = "left", show = TRUE,
+      headerStyle = c(HDR_STYLE, list(flex = "0 0 120px", minWidth = "120px", width = "120px")),
+      style = list(flex = "0 0 120px", whiteSpace = "nowrap", overflow = "visible"),
       cell = function(v) {
         if (is.na(v) || v == "—")
           return(span("—", style = "color:#CBD5E0; font-size:11px;"))
         span(v, style = paste0("font-size:14px; color:", AF_NAVY, "; font-weight:700; white-space:nowrap;"))
+      }
+    ),
+    Assessment = colDef(
+      name = "Assessment", width = 130, minWidth = 130, maxWidth = 130, align = "left", show = TRUE,
+      headerStyle = c(HDR_STYLE, list(flex = "0 0 130px", minWidth = "130px", width = "130px")),
+      style = list(flex = "0 0 130px", whiteSpace = "nowrap", overflow = "visible"),
+      cell = function(v) {
+        if (is.na(v) || v == "" || v == "—")
+          return(span("—", style = "color:#CBD5E0; font-size:11px;"))
+        span(v, style = paste0("font-size:14px; color:", AF_NAVY, "; font-weight:700; white-space:nowrap;"))
+      }
+    ),
+    Row_arrow = colDef(
+      name = "", width = 56, minWidth = 56, maxWidth = 56, align = "center", show = TRUE,
+      sortable = FALSE, searchable = FALSE, html = TRUE,
+      headerStyle = c(HDR_STYLE, list(flex = "0 0 56px", minWidth = "56px", width = "56px")),
+      style = list(flex = "0 0 56px", overflow = "visible"),
+      cell = function(v, index) {
+        href <- browse_base$Detail_url[[index]]
+        paste0(
+          '<a href="', htmltools::htmlEscape(href), '" style="text-decoration:none;display:inline-flex;" ',
+          'aria-label="Open study detail">',
+          row_arrow_icon(),
+          "</a>"
+        )
       }
     ),
     Grade = colDef(show = FALSE),
@@ -583,6 +758,11 @@ browse_table <- reactable(
     Study_Type_Label = colDef(show = FALSE),
     Study_Type = colDef(show = FALSE),
     Study_Design = colDef(show = FALSE),
+    Project_Grades = colDef(show = FALSE),
+    Project_Languages = colDef(show = FALSE),
+    Grade_legacy = colDef(show = FALSE),
+    survey_key = colDef(show = FALSE),
+    base_slug = colDef(show = FALSE),
     Project_Name = colDef(show = FALSE),
     Acronym = colDef(show = FALSE),
     Description = colDef(show = FALSE),
@@ -601,15 +781,7 @@ browse_table <- reactable(
     RCT = colDef(show = FALSE),
     Comments = colDef(show = FALSE),
     study_key = colDef(show = FALSE),
-    Row_arrow = colDef(
-      name = "", width = 48, minWidth = 48, align = "center", show = TRUE,
-      sortable = FALSE, searchable = FALSE, html = TRUE,
-      headerStyle = HDR_STYLE,
-      cell = function(v, index) {
-        href <- browse_base$Detail_url[[index]]
-        tags$a(href = href, style = "text-decoration:none;", row_arrow_icon())
-      }
-    )
+    Code = colDef(show = FALSE)
   )
 )
 
@@ -687,7 +859,21 @@ write_study_detail_pages(
   file_cell = file_cell,
   link_pill = link_pill,
   study_type_label = study_type_label,
-  linking_source = linking_source
+  linking_source = linking_source,
+  sampling_lookup = sampling_lookup
+)
+
+write_landing_page(
+  outfile = file.path(PUBLISH_DIR, "index.html"),
+  title = AHEAD_TITLE,
+  subheading = AHEAD_FULL_NAME,
+  description = AHEAD_DESCRIPTION,
+  n_countries = AHEAD_N_COUNTRIES,
+  n_projects = AHEAD_N_PROJECTS,
+  n_surveys = AHEAD_N_SURVEYS,
+  n_persons = AHEAD_N_PERSONS,
+  last_updated = last_updated,
+  harmonised_data_url = HARMONISED_DATA_URL
 )
 ```
 
@@ -734,16 +920,21 @@ body {
   display: block;
 }
 
-/* ── Header (layer 2 — lighter navy) ───────────────────────────────────────── */
-.af-header {
+/* ── Sub-nav strip (layer 2 — lighter navy) ─────────────────────────────────── */
+.af-subnav {
   background: #100A78;
-  padding: 1.5rem 2rem 1.25rem;
+  padding: 0.9rem 2rem;
   border-bottom: 3px solid #080056;
-}
-.af-header-inner {
-  display: flex; align-items: flex-start;
+  display: flex; align-items: center;
   justify-content: space-between; flex-wrap: wrap;
-  gap: 1rem; margin-bottom: 0.75rem;
+  gap: 1rem;
+}
+.af-back-link {
+  color: #CBD5E1; text-decoration: none; font-size: 0.95rem; font-weight: 600;
+}
+.af-back-link:hover { color: #C8892A; }
+.af-subnav-actions {
+  display: flex; align-items: center; gap: 1.25rem;
 }
 .af-brand    { display: flex; flex-direction: column; gap: 0.25rem; }
 .af-page-title { font-size: 2.5rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.04em; line-height: 1.1; }
@@ -786,7 +977,7 @@ body {
   background: #FFFFFF;
 }
 .af-sidebar {
-  width: 270px;
+  width: 480px;
   flex-shrink: 0;
   padding: 1.25rem 1.1rem 1.5rem;
   border-right: 1px solid #E5E7EB;
@@ -932,6 +1123,8 @@ body {
   font-weight: 500;
   color: #1F2937;
   font-size: 15px;
+  white-space: nowrap;
+  overflow: visible;
 }
 .af-country-flag {
   width: 24px;
@@ -968,6 +1161,23 @@ body {
   overflow: visible !important;
 }
 
+/* Full-width rows; columns pack left (Study name does not stretch) */
+.rt-table {
+  width: 100% !important;
+  min-width: 100% !important;
+  table-layout: auto !important;
+}
+.rt-thead, .rt-tbody, .rt-tr-group, .rt-tr {
+  width: 100% !important;
+}
+.rt-tr {
+  display: flex !important;
+  justify-content: flex-start !important;
+}
+.rt-th, .rt-td {
+  box-sizing: border-box;
+}
+
 /* Resize handle styling */
 .rt-th-resize-handle {
   border-right: 2px solid #D1D5DB !important;
@@ -976,16 +1186,9 @@ body {
 }
 .rt-th:hover .rt-th-resize-handle { opacity: 1; }
 
-/* Force the reactable table itself not to compress columns below their set width */
-.rt-table {
-  min-width: 100%;
-  table-layout: auto !important;
-}
-
 /* Any header whose inline width style is set must be respected */
 .rt-th[style*="width"] {
   flex-shrink: 0 !important;
-  min-width: 0 !important;
 }
 .rt-th:last-child  { border-right: none !important; }
 .rt-th:hover       { background: transparent !important; color: #06003E !important; }
@@ -1015,6 +1218,7 @@ body {
   vertical-align: middle !important;
   font-family: var(--af-font) !important;
   font-size: 15px !important;
+  overflow: visible !important;
 }
 .rt-td:last-child { border-right: none !important; }
 
@@ -1024,26 +1228,12 @@ body {
 }
 .af-study-link:hover { color: #1B6FD8 !important; text-decoration: underline !important; }
 
-/* Keep Year / Grade(s) on one line */
-.rt-th[style*="width: 100px"],
-.rt-td[style*="width: 100px"],
-.rt-th[style*="width: 110px"],
-.rt-td[style*="width: 110px"],
-.rt-th[style*="width: 130px"],
-.rt-td[style*="width: 130px"] {
+/* Keep compact columns from wrapping */
+.rt-th[style*="flex: 0 0"],
+.rt-td[style*="flex: 0 0"] {
   white-space: nowrap !important;
   flex-shrink: 0 !important;
 }
-
-/* ── Legend ───────────────────────────────────────────────────────────────── */
-.af-legend {
-  display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: center;
-  padding: 0.85rem 2rem;
-  background: #FFFFFF;
-  border-bottom: 1px solid #E5E7EB;
-  font-size: 13px; color: #6B7280;
-}
-.af-legend-label { font-weight: 700; color: #374151; }
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */
 .af-footer {
@@ -1105,17 +1295,6 @@ if (window.HTMLWidgets) {
   });
 }
 </script>
-
-<div class="af-legend">
-  <span class="af-legend-label">Study type:</span>
-  <span style="background:#06003E;color:#fff;font-size:11px;padding:2px 8px;border-radius:9px;">Cross-sectional</span>
-  <span style="background:#7C3AED;color:#fff;font-size:10px;padding:2px 8px;border-radius:9px;">School panel</span>
-  <span class="af-legend-label" style="margin-left:0.75rem;">Study design:</span>
-  <span style="background:#10B981;color:#fff;font-size:10px;padding:2px 8px;border-radius:9px;">Descriptive</span>
-  <span style="background:#F59E0B;color:#fff;font-size:10px;padding:2px 8px;border-radius:9px;">Pre/Post</span>
-  <span style="background:#EF4444;color:#fff;font-size:10px;padding:2px 8px;border-radius:9px;">RCT</span>
-  <span style="margin-left:auto; color:#94A3B8;">▶ Click a row to open the study detail page</span>
-</div>
 
 <div class="af-footer">
   <strong>AHEAD — African Harmonised Early-Grade Assessments Data</strong> ·
