@@ -7,8 +7,8 @@ Published output for GitHub Pages lives in **`docs/`**.
 
 1. Open **`aflearn-site.Rproj`** in RStudio.
 2. Place these data files in the project root (same folder as the `.qmd` files):
-   - **`EGRA_Harmonization_Waves_Details.xlsx`**
-   - **`variable-availability-matrix.xlsx`** (`va-matrix` + `sub-tasks-desc` sheets; sub-task filter and study pages)
+   - **`ahead-catalogue-v1.xlsx`** — primary catalogue (home page, projects, surveys, subtasks, sampling, linking)
+   - **`EGRA_Harmonization_Waves_Details.xlsx`** — still used for per-survey grade values (the catalogue stores grades at project level only)
 3. Install R packages once:
 
 ```r
@@ -28,7 +28,8 @@ This writes:
 
 | Path | Purpose |
 |------|---------|
-| `docs/index.html` | Browse page (study rounds table) |
+| `docs/index.html` | Landing page (hero + "Access AHEAD dataset" / "Explore AHEAD catalogue" cards) |
+| `docs/catalogue.html` | Browse page (study rounds table with filters) |
 | `docs/studies/*.html` | One detail page per study round |
 | `docs/.nojekyll` | Tells GitHub Pages not to run Jekyll |
 
@@ -92,14 +93,6 @@ If Pages settings are missing or greyed out, a **DataFirst-Courses org admin** m
 source("render_site.R")
 ```
 
-If you update only the harmonisation Excel and need to refresh sub-task availability:
-
-```bash
-python build_variable_availability_matrix.py
-```
-
-Then re-render and push `docs/` as usual.
-
 Then:
 
 ```bash
@@ -108,28 +101,40 @@ git commit -m "Update study rounds site"
 git push
 ```
 
+> **Note:** `variable-availability-matrix.xlsx` and `build_variable_availability_matrix.py` are no longer used by the site build. Subtask availability now comes from the `assessment-subtasks` and `subtask-descriptions` sheets in `ahead-catalogue-v1.xlsx`.
+
 ## Project layout
 
 ```
 aflearn-site/
-├── aflearn_dataset_reference_5.qmd   # Main Quarto source
-├── aflearn_study_pages.R             # Study detail page generator
+├── aflearn_dataset_reference_5.qmd   # Main Quarto source → docs/catalogue.html
+├── aflearn_study_pages.R             # Landing page, study detail page & CSS generators
 ├── render_site.R                     # One-command render → docs/
 ├── _quarto.yml                       # Output directory: docs/
-├── EGRA_Harmonization_Waves_Details.xlsx
-├── variable-availability-matrix.xlsx   # Sub-task availability (va-matrix + sub-tasks-desc)
-├── build_variable_availability_matrix.py  # Regenerate xlsx from harmonisation Excel
+├── ahead-catalogue-v1.xlsx           # Primary catalogue (required)
+├── EGRA_Harmonization_Waves_Details.xlsx  # Per-survey grades (optional but recommended)
 ├── docs/                             # ← GitHub Pages publish root (committed)
-│   ├── index.html
+│   ├── index.html                    # Landing page (write_landing_page())
+│   ├── catalogue.html                # Browse page (quarto_render output)
 │   ├── studies/
 │   └── .nojekyll
 └── aflearn_variable_availability.qmd # Separate tool (not in main site yet)
 ```
 
-## Variable availability browser
+The landing page (`docs/index.html`) is written directly by `write_landing_page()` in `aflearn_study_pages.R` during the same render pass — it is not a Quarto output file, the same way study detail pages aren't.
 
-See `aflearn_variable_availability.qmd` for the harmonized variable coverage table.  
-It can be linked or embedded from the main site in a later phase.
+## Catalogue sheets used
+
+| Sheet | Used for |
+|-------|----------|
+| `home-page` | Title, description, headline counts, filter vocabularies |
+| `about-the-program` | Project name, acronym, description, study type/design, assessment |
+| `assessment-surveys` | One row per survey round |
+| `assessment-subtasks` | Which subtasks each survey administered |
+| `subtask-descriptions` | Subtask titles and prose |
+| `subtask-labels` | Assessment / core / alternate prefixes |
+| `sampling-description` | Sampling prose on study detail pages |
+| `link-to-source` | Harmonised ↔ source ID crosswalk |
 
 ## Related links
 
