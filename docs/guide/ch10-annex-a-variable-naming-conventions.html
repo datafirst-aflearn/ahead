@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title> 9 Annex A — Variable naming conventions | AHEAD User Guide</title>
+  <meta name="description" content=" 9 Annex A — Variable naming conventions | AHEAD User Guide" />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content=" 9 Annex A — Variable naming conventions | AHEAD User Guide" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content=" 9 Annex A — Variable naming conventions | AHEAD User Guide" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ch09-missing-values.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="toc-logo"><a href="../index.html"><img src="files/aflearn-logo.png" alt="AFLEARN"></a></li>
+<li class="home-link"><a href="index.html"><i class="fa fa-home"></i> Guide home</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#using-this-guide"><i class="fa fa-check"></i><b>0.1</b> Using this Guide</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="ch02-objectives-of-harmonization.html"><a href="ch02-objectives-of-harmonization.html"><i class="fa fa-check"></i><b>1</b> Objectives of Harmonization</a></li>
+<li class="chapter" data-level="2" data-path="ch03-guiding-principles.html"><a href="ch03-guiding-principles.html"><i class="fa fa-check"></i><b>2</b> Guiding Principles</a></li>
+<li class="chapter" data-level="3" data-path="ch04-prioritization-criteria.html"><a href="ch04-prioritization-criteria.html"><i class="fa fa-check"></i><b>3</b> Prioritization Criteria for Inclusion</a></li>
+<li class="chapter" data-level="4" data-path="ch05-context-demographics-survey-study-design.html"><a href="ch05-context-demographics-survey-study-design.html"><i class="fa fa-check"></i><b>4</b> Context: demographics, survey and study designs</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="ch05-context-demographics-survey-study-design.html"><a href="ch05-context-demographics-survey-study-design.html#demographics-and-pupil-context"><i class="fa fa-check"></i><b>4.1</b> Demographics and pupil context</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="ch05-context-demographics-survey-study-design.html"><a href="ch05-context-demographics-survey-study-design.html#important-considerations"><i class="fa fa-check"></i><b>4.1.1</b> Important considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="ch05-context-demographics-survey-study-design.html"><a href="ch05-context-demographics-survey-study-design.html#survey-design-weights-and-geography"><i class="fa fa-check"></i><b>4.2</b> Survey design, weights, and geography</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="ch05-context-demographics-survey-study-design.html"><a href="ch05-context-demographics-survey-study-design.html#important-considerations-1"><i class="fa fa-check"></i><b>4.2.1</b> Important considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="ch05-context-demographics-survey-study-design.html"><a href="ch05-context-demographics-survey-study-design.html#study-design"><i class="fa fa-check"></i><b>4.3</b> Study Design</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="ch06-egra-egma-subtask-variables.html"><a href="ch06-egra-egma-subtask-variables.html"><i class="fa fa-check"></i><b>5</b> EGRA and EGMA subtask variables</a></li>
+<li class="chapter" data-level="6" data-path="ch07-multiple-instances-same-subtask.html"><a href="ch07-multiple-instances-same-subtask.html"><i class="fa fa-check"></i><b>6</b> Multiple instances of the same subtask</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="ch07-multiple-instances-same-subtask.html"><a href="ch07-multiple-instances-same-subtask.html#important-considerations-2"><i class="fa fa-check"></i><b>6.1</b> Important considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch08-identifiers.html"><a href="ch08-identifiers.html"><i class="fa fa-check"></i><b>7</b> Identifiers</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ch08-identifiers.html"><a href="ch08-identifiers.html#original-identifiers-school_id-student_id"><i class="fa fa-check"></i><b>7.1</b> Original identifiers (school_id, student_id)</a></li>
+<li class="chapter" data-level="7.2" data-path="ch08-identifiers.html"><a href="ch08-identifiers.html#harmonized-student-id-harm_student_id"><i class="fa fa-check"></i><b>7.2</b> Harmonized student ID (harm_student_id)</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ch09-missing-values.html"><a href="ch09-missing-values.html"><i class="fa fa-check"></i><b>8</b> Missing values and unresolved codes</a></li>
+<li class="chapter" data-level="9" data-path="ch10-annex-a-variable-naming-conventions.html"><a href="ch10-annex-a-variable-naming-conventions.html"><i class="fa fa-check"></i><b>9</b> Annex A — Variable naming conventions</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AHEAD User Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<p class="guide-home-link">
+  <a href="../index.html"><i class="fa fa-arrow-left"></i> Back to AHEAD</a>
+</p>
+<div id="ch10-annex-a-variable-naming-conventions" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number"> 9</span> Annex A — Variable naming conventions<a href="ch10-annex-a-variable-naming-conventions.html#ch10-annex-a-variable-naming-conventions" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Harmonized names use snake_case. Every EGRA/EGMA subtask shares a subtask stem; individual fields add an item number or metric suffix.</p>
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Task</th>
+    <th>Core stem</th>
+  </tr>
+  <tr>
+    <td>Number identification</td>
+    <td><code>num_id</code></td>
+  </tr>
+  <tr>
+    <td>Number discrimination</td>
+    <td><code>quant_comp</code></td>
+  </tr>
+  <tr>
+    <td>Addition level I</td>
+    <td><code>addlvl1</code></td>
+  </tr>
+  <tr>
+    <td>Addition level II</td>
+    <td><code>addlvl2</code></td>
+  </tr>
+  <tr>
+    <td>Subtraction level I</td>
+    <td><code>sublvl1</code></td>
+  </tr>
+  <tr>
+    <td>Subtraction level II</td>
+    <td><code>sublvl2</code></td>
+  </tr>
+  <tr>
+    <td>Word problems</td>
+    <td><code>word_prob</code></td>
+  </tr>
+  <tr>
+    <td>Missing number</td>
+    <td><code>miss_num</code></td>
+  </tr>
+  <tr>
+    <td>Multiplication</td>
+    <td><code>mult</code></td>
+  </tr>
+  <tr>
+    <td>Fractions</td>
+    <td><code>frac</code></td>
+  </tr>
+  <tr>
+    <td>Shape identification</td>
+    <td><code>shape_id</code></td>
+  </tr>
+  <tr>
+    <td>Written exercise</td>
+    <td><code>we_add</code>, <code>we_sub</code>, <code>we_mult</code>, <code>we_div</code></td>
+  </tr>
+</table>
+</div>
+<p><em>Table 12: Standard EGMA subtask prefixes</em></p>
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Task</th>
+    <th>Core stem</th>
+    <th>Alternate prefixes in project data</th>
+  </tr>
+  <tr>
+    <td>Listening comprehension</td>
+    <td><code>list_comp</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Letter name knowledge</td>
+    <td><code>letter_name</code></td>
+    <td><code>letter</code></td>
+  </tr>
+  <tr>
+    <td>Letter sound knowledge</td>
+    <td><code>letter_sound</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Invented word reading</td>
+    <td><code>invent_word</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Familiar word reading</td>
+    <td><code>fam_word</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Oral reading fluency</td>
+    <td><code>oral_read</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Reading comprehension</td>
+    <td><code>read_comp</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Letter dictation</td>
+    <td><code>dict</code></td>
+    <td><code>dict_let</code>, <code>dict_letter</code>, <code>letter_dict</code></td>
+  </tr>
+  <tr>
+    <td>Word dictation</td>
+    <td><code>dict_word</code></td>
+    <td><code>word_dict</code></td>
+  </tr>
+  <tr>
+    <td>Sentence dictation</td>
+    <td><code>dict_sent</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Vocabulary</td>
+    <td><code>vocabA</code>, <code>vocabB</code>, <code>vocabC</code>, <code>vocab_word</code></td>
+    <td><code>vocab</code></td>
+  </tr>
+  <tr>
+    <td>Oral vocabulary</td>
+    <td><code>oral_vocab</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Maze / cloze</td>
+    <td><code>mazeA</code>, <code>mazeB</code></td>
+    <td><code>maze</code></td>
+  </tr>
+  <tr>
+    <td>Phonemic awareness &mdash; initial sound</td>
+    <td><code>pa_init_sound</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Phonemic awareness &mdash; different initial sound</td>
+    <td><code>pa_df_init_snd</code></td>
+    <td><code>pa_diff_init_sound</code></td>
+  </tr>
+  <tr>
+    <td>Phonemic awareness &mdash; different final sound</td>
+    <td><code>pa_df_fnl_snd</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Phonemic awareness &mdash; segmentation</td>
+    <td><code>pa_num_sound</code></td>
+    <td><code>pa_phon_sound</code>, <code>pa_sounds_id</code></td>
+  </tr>
+  <tr>
+    <td>Syllable reading</td>
+    <td><code>syllable_sound</code></td>
+    <td><code>syll_sound</code></td>
+  </tr>
+  <tr>
+    <td>Silly sentence</td>
+    <td><code>silly_sentence</code></td>
+    <td>&mdash;</td>
+  </tr>
+</table>
+</div>
+<p><em>Table 13: Standard EGRA subtask prefixes</em></p>
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Pattern</th>
+    <th>Typical meaning</th>
+    <th>Harmonized treatment</th>
+  </tr>
+  <tr>
+    <td><code>l2_</code>, <code>mt</code>, <code>mt1</code>&ndash;<code>mt3</code></td>
+    <td>Second language / mother tongue</td>
+    <td>Separate <code>l2_*</code> stem</td>
+  </tr>
+  <tr>
+    <td><code>unt</code>, <code>k_unt</code></td>
+    <td>Untimed administration</td>
+    <td>Separate stem (e.g. <code>unt_oral_read</code>)</td>
+  </tr>
+  <tr>
+    <td><code>lb</code>, <code>ext_lb</code>, <code>ilb</code></td>
+    <td>Look-back comprehension</td>
+    <td>Separate stem or <code>read_compB</code> variant</td>
+  </tr>
+  <tr>
+    <td>B, A on stem</td>
+    <td>Alternate passage or section</td>
+    <td>Separate stem (<code>oral_readB</code>, <code>vocabB</code>)</td>
+  </tr>
+  <tr>
+    <td><code>eq</code>, <code>k_eq</code>, <code>r_eq</code></td>
+    <td>Baseline-adjusted equivalent score</td>
+    <td>Excluded</td>
+  </tr>
+  <tr>
+    <td><code>i</code>, <code>i1</code>&ndash;<code>i3</code></td>
+    <td>Imputed values</td>
+    <td>Excluded</td>
+  </tr>
+  <tr>
+    <td><code>t</code>, <code>ht</code>, <code>sso</code></td>
+    <td>Teacher / head teacher / staff</td>
+    <td>Excluded (non-pupil)</td>
+  </tr>
+</table>
+</div>
+<p><em>Table 14: Common project-specific prefix patterns</em></p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ch09-missing-values.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Source+Sans+3:wght@400;500;600&display=swap');
+
+/* AFLEARN / AHEAD brand palette
+   Off-white #EEF3F7 (60%) base, Navy #0D0D52 (30%) chrome, Blue #0049FF (10%) accent */
+
+body, p, li, td, th {
+  font-family: 'Source Sans 3', sans-serif;
+}
+
+.title, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+  color: #0D0D52;
+}
+
+.title {
+  font-weight: 900;
+}
+
+.subtitle {
+  font-family: 'Inter', sans-serif;
+  color: #0D0D52;
+  font-weight: 600;
+  font-style: normal !important;
+}
+
+/* Sidebar / TOC */
+.book .book-summary {
+  background: #FFFFFF;
+  border-right: 1px solid #E5E7EB;
+}
+
+.book .book-summary ul.summary li a,
+.book .book-summary ul.summary li span {
+  color: #0D0D52;
+}
+
+.summary a:hover {
+  color: #0049FF !important;
+}
+
+.book .book-summary ul.summary li.active > a {
+  color: #0049FF !important;
+  border-left: solid 4px;
+  border-color: #0049FF;
+  padding-left: 11px !important;
+}
+
+li.appendix span, li.part span {
+  color: #0D0D52 !important;
+  opacity: 1 !important;
+  text-transform: uppercase;
+}
+
+/* Body links */
+.book .book-body .page-wrapper .page-inner section.normal a {
+  color: #0049FF;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal a:hover {
+  color: #0D0D52;
+  text-decoration: none;
+}
+
+/* TOC logo */
+.toc-logo {
+  background-color: #0D0D52;
+  width: 100% !important;
+  box-sizing: border-box;
+  padding: 14px 20px;
+  margin: 0;
+  display: block;
+}
+
+.toc-logo img {
+  max-width: 150px;
+  display: block;
+  margin: 0 auto;
+}
+
+.summary > li:first-child {
+  height: auto !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Home navigation */
+.book .book-summary ul.summary li.home-link > a {
+  font-weight: 700;
+  color: #0D0D52 !important;
+  background: #EEF3F7;
+  border-radius: 8px;
+  margin: 8px 12px;
+  display: block;
+}
+
+.book .book-summary ul.summary li.home-link > a:hover {
+  background: #0049FF;
+  color: #FFFFFF !important;
+}
+
+.guide-home-link {
+  margin: 0 0 1.5em 0;
+  padding: 0.75em 1em;
+  background: #EEF3F7;
+  border-left: 4px solid #0049FF;
+  border-radius: 4px;
+}
+
+.guide-home-link a {
+  color: #0D0D52;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.guide-home-link a:hover {
+  color: #0049FF;
+  text-decoration: underline;
+}
+
+em {
+  font-style: normal !important;
+}
+
+/* Reference-guide data tables (structure follows the PASEC/AMPL guide pattern) */
+.ahead-table-wrap {
+  overflow-x: auto;
+  margin: 1.25em 0;
+}
+
+.ahead-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+
+.ahead-data-table td,
+.ahead-data-table th {
+  border: 1px solid #d0d0d0;
+  padding: 0.45em 0.65em;
+  vertical-align: top;
+  text-align: left;
+}
+
+.ahead-data-table th {
+  background-color: #0D0D52;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* GitBook zebra-striping targets all tables; keep our own header colours */
+.book .book-body .page-wrapper .page-inner section.normal table.ahead-data-table tr,
+.book .book-body .page-wrapper .page-inner section.normal table.ahead-data-table tr:nth-child(2n) {
+  background-color: transparent !important;
+}
+
+/* Callout / note box */
+.ahead-note {
+  margin: 1.25em 0;
+  padding: 0.9em 1.1em;
+  background: #EEF3F7;
+  border-left: 4px solid #0049FF;
+  border-radius: 4px;
+}
+
+.ahead-note p:first-child {
+  margin-top: 0;
+}
+
+.ahead-note p:last-child {
+  margin-bottom: 0;
+}

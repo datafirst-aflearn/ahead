@@ -1,0 +1,7 @@
+# Objectives of Harmonization {#ch02-objectives-of-harmonization}
+
+The harmonization programme has three primary objectives:
+
+- Build a flexible database that can integrate new studies as they become available, including non-USAID-funded national EGRA/EGMA assessments over time.
+- Ensure consistent variable naming, structure, and documentation across datasets so that comparable fields mean the same thing in every project.
+- Enable comparative and pooled analysis at multiple levels: pupil, school, project, and country.

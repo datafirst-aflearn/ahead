@@ -22,21 +22,21 @@ button.af-study-tab {
 }
 body {
   font-size: 16px;
-  background: #FFFFFF;
+  background: #EEF3F7;
   color: #1F2937;
   margin: 0; padding: 0;
 }
 .af-logobar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.85rem 2rem; background: #080056;
+  padding: 0.85rem 2rem; background: #0D0D52;
 }
 .af-logo-aflearn,
 .af-logo-datafirst {
   height: 96px; width: auto; max-width: 320px; object-fit: contain; display: block;
 }
 .af-study-hero {
-  background: #100A78; color: #fff; padding: 1.75rem 2rem 1.5rem;
-  border-bottom: 3px solid #080056;
+  background: #0D0D52; color: #fff; padding: 1.75rem 2rem 1.5rem;
+  border-bottom: 3px solid #0A0A42;
 }
 .af-study-hero h1 {
   margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 800; line-height: 1.25;
@@ -44,7 +44,7 @@ body {
 .af-back-link {
   color: #CBD5E1; text-decoration: none; font-size: 0.9rem; font-weight: 600;
 }
-.af-back-link:hover { color: #C8892A; }
+.af-back-link:hover { color: #0049FF; }
 .af-study-layout {
   display: grid; grid-template-columns: minmax(0, 1fr) 280px;
   gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 1.75rem 2rem 2.5rem;
@@ -59,19 +59,19 @@ body {
   font-family: var(--af-font); font-size: 1.05rem; font-weight: 800;
   color: #0F1F38; cursor: pointer; transition: color 0.15s, border-color 0.15s;
 }
-.af-study-tab:hover { color: #C8892A; }
-.af-study-tab.active { color: #C8892A; border-bottom-color: #C8892A; }
+.af-study-tab:hover { color: #0049FF; }
+.af-study-tab.active { color: #0049FF; border-bottom-color: #0049FF; }
 .af-study-panel { display: none; }
 .af-study-panel.active { display: block; }
 .af-study-panel p {
   font-size: 1rem; line-height: 1.7; color: #374151; margin: 0 0 1rem;
 }
 .af-section-title {
-  font-size: 1.15rem; font-weight: 800; color: #06003E; margin: 1.5rem 0 0.75rem;
+  font-size: 1.15rem; font-weight: 800; color: #1F2937; margin: 1.5rem 0 0.75rem;
 }
 .af-section-title:first-child { margin-top: 0; }
 .af-meta-card {
-  background: #F8FAFC; border: 1px solid #E5E7EB; border-radius: 8px;
+  background: #EEF3F7; border: 1px solid #E5E7EB; border-radius: 8px;
   padding: 1.1rem 1.15rem;
 }
 .af-meta-row {
@@ -80,21 +80,29 @@ body {
 }
 .af-meta-row:last-child { border-bottom: none; }
 .af-meta-label { color: #64748B; font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.06em; }
-.af-meta-value { color: #06003E; font-weight: 700; text-align: right; }
-.af-subtask-list { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.5rem; }
-.af-subtask-item {
-  border: 1px solid #E5E7EB; border-radius: 8px; background: #FFFFFF;
+.af-meta-value { color: #1F2937; font-weight: 700; text-align: right; }
+.af-subtask-table-wrap {
+  margin-top: 0.5rem; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;
+  background: #FFFFFF;
 }
-.af-subtask-item summary {
-  cursor: pointer; padding: 0.9rem 1rem; font-weight: 800; color: #06003E;
-  list-style: none; display: flex; justify-content: space-between; align-items: center;
+.af-subtask-table {
+  width: 100%; border-collapse: collapse; font-size: 0.95rem;
 }
-.af-subtask-item summary::-webkit-details-marker { display: none; }
-.af-subtask-item summary::after { content: '+'; color: #06003E; font-size: 1.2rem; font-weight: 700; }
-.af-subtask-item[open] summary::after { content: '×'; }
-.af-subtask-item summary:hover { color: #C8892A; }
-.af-subtask-body {
-  padding: 0 1rem 1rem; font-size: 0.95rem; line-height: 1.65; color: #374151;
+.af-subtask-table th {
+  text-align: left; padding: 0.7rem 1rem; background: #EEF3F7;
+  color: #64748B; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  border-bottom: 1px solid #E5E7EB;
+}
+.af-subtask-table td {
+  padding: 0.7rem 1rem; border-bottom: 1px solid #E5E7EB; color: #1F2937;
+  vertical-align: top;
+}
+.af-subtask-table tr:last-child td { border-bottom: none; }
+.af-subtask-table .af-subtask-name { font-weight: 700; }
+.af-subtask-table .af-subtask-prefix {
+  font-family: ui-monospace, monospace; font-weight: 600; color: #0D0D52;
+  white-space: nowrap;
 }
 .af-svyset {
   font-family: ui-monospace, monospace; font-size: 12px; color: #0F1F38;
@@ -105,7 +113,7 @@ body {
 
 .af-footer {
   padding: 0.9rem 2rem 1.5rem; font-size: 0.82rem; color: #9CA3AF;
-  border-top: 1px solid #E5E7EB; background: #FFFFFF;
+  border-top: 1px solid #E5E7EB; background: #EEF3F7;
 }
 .af-link-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 0.75rem; }
 .af-link-pill {
@@ -120,7 +128,7 @@ body {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   min-width: 64px; padding: 0.55rem 0.7rem; border-radius: 8px; text-align: center;
 }
-.af-id-segment.known { background: #100A78; color: #fff; }
+.af-id-segment.known { background: #0D0D52; color: #fff; }
 .af-id-segment.unknown {
   background: #F8FAFC; color: #94A3B8; border: 1.5px dashed #CBD5E1;
 }
@@ -144,8 +152,8 @@ body {
   background: #F8FAFC; color: #64748B; font-weight: 700; font-size: 0.72rem;
   text-transform: uppercase; letter-spacing: 0.05em;
 }
-.af-crosswalk-var { font-family: ui-monospace, monospace; font-weight: 700; color: #06003E; }
-.af-crosswalk-arrow { text-align: center; color: #C8892A; font-weight: 700; }
+.af-crosswalk-var { font-family: ui-monospace, monospace; font-weight: 700; color: #1F2937; }
+.af-crosswalk-arrow { text-align: center; color: #0049FF; font-weight: 700; }
 .af-code-tabs { display: flex; gap: 0.5rem; margin: 0.5rem 0 0; }
 .af-code-tab {
   background: #F8FAFC; border: 1px solid #E5E7EB; border-bottom: none;
@@ -204,62 +212,53 @@ body {
         <div id="panel-about" class="af-study-panel active">
           <p>From 2010 to 2012, the Malawi National and Reading Intervention EGRA, a USAID-funded project under the Malawi Teacher Professional Development Support (MTPDS) programme, aimed to measure early grade reading development, establish baseline evidence for programme activities, and identify areas of weakness to inform curriculum and instructional improvements for Grade 2 and Grade 4 learners. Data were collected using the Early Grade Reading Assessment (EGRA) in Chichewa across three nationally representative cross-sectional assessments in 2010, 2011, and 2012. The project covered 32 districts across Malawi, with an intervention component in Salima and Ntchisi districts and control schools in Mwanza and Dedza districts, and was nationally representative.</p>
           <h2 class="af-section-title">Assessment Subtasks</h2>
-          <p style="color:#64748B; font-size:0.95rem; margin-bottom:1rem;">The subtasks included in this assessment survey are described below.</p>
-          <div class="af-subtask-list">
-            <details class="af-subtask-item">
-              <summary>Familiar word reading</summary>
-              <div class="af-subtask-body">
-                <p>Learners read high-frequency words within 60 seconds (CWPM).</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Non-word reading</summary>
-              <div class="af-subtask-body">
-                <p>Learners read aloud pseudowords within 60 seconds (CWPM). Discontinued if none of the first five words are correct.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Oral reading fluency</summary>
-              <div class="af-subtask-body">
-                <p>Learners read a grade-appropriate passage within 60 seconds (CWPM). Discontinued if none of the first ~10 words are correct.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Reading comprehension</summary>
-              <div class="af-subtask-body">
-                <p>Learners answer questions on a passage; may allow look-backs. Untimed.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Listening comprehension</summary>
-              <div class="af-subtask-body">
-                <p>Learners listen to a passage and answer comprehension questions. Untimed; no discontinuation rule.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Phoneme segmentation</summary>
-              <div class="af-subtask-body">
-                <p>Learners break words into individual sounds or syllables. Untimed; discontinued if no points in first five items.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Letter name identification</summary>
-              <div class="af-subtask-body">
-                <p>Learners identify upper- and/or lower-case letters by name within 60 seconds (LNCPM). Discontinued if no letters in the first line are correct.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Syllable identification</summary>
-              <div class="af-subtask-body">
-                <p>Learners identify syllables by sound within 60 seconds. Used in syllabic languages.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Initial sound identification</summary>
-              <div class="af-subtask-body">
-                <p>Learners isolate and pronounce the first sound of a word. Untimed.</p>
-              </div>
-            </details>
+          <div class="af-subtask-table-wrap">
+            <table class="af-subtask-table">
+              <thead>
+                <tr>
+                  <th>Sub-task</th>
+                  <th>Prefix</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="af-subtask-name">Familiar word reading</td>
+                  <td class="af-subtask-prefix">fam_word</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Non-word reading</td>
+                  <td class="af-subtask-prefix">invent_word</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Oral reading fluency</td>
+                  <td class="af-subtask-prefix">oral_read</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Reading comprehension</td>
+                  <td class="af-subtask-prefix">read_comp</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Listening comprehension</td>
+                  <td class="af-subtask-prefix">list_comp</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Phoneme segmentation</td>
+                  <td class="af-subtask-prefix">pa_num_sound</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Letter name identification</td>
+                  <td class="af-subtask-prefix">letter_name</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Syllable identification</td>
+                  <td class="af-subtask-prefix">syllable_sound</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Initial sound identification</td>
+                  <td class="af-subtask-prefix">pa_init_sound</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <div id="panel-sampling" class="af-study-panel">

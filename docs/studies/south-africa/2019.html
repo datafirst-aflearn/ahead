@@ -22,21 +22,21 @@ button.af-study-tab {
 }
 body {
   font-size: 16px;
-  background: #FFFFFF;
+  background: #EEF3F7;
   color: #1F2937;
   margin: 0; padding: 0;
 }
 .af-logobar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.85rem 2rem; background: #080056;
+  padding: 0.85rem 2rem; background: #0D0D52;
 }
 .af-logo-aflearn,
 .af-logo-datafirst {
   height: 96px; width: auto; max-width: 320px; object-fit: contain; display: block;
 }
 .af-study-hero {
-  background: #100A78; color: #fff; padding: 1.75rem 2rem 1.5rem;
-  border-bottom: 3px solid #080056;
+  background: #0D0D52; color: #fff; padding: 1.75rem 2rem 1.5rem;
+  border-bottom: 3px solid #0A0A42;
 }
 .af-study-hero h1 {
   margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 800; line-height: 1.25;
@@ -44,7 +44,7 @@ body {
 .af-back-link {
   color: #CBD5E1; text-decoration: none; font-size: 0.9rem; font-weight: 600;
 }
-.af-back-link:hover { color: #C8892A; }
+.af-back-link:hover { color: #0049FF; }
 .af-study-layout {
   display: grid; grid-template-columns: minmax(0, 1fr) 280px;
   gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 1.75rem 2rem 2.5rem;
@@ -59,19 +59,19 @@ body {
   font-family: var(--af-font); font-size: 1.05rem; font-weight: 800;
   color: #0F1F38; cursor: pointer; transition: color 0.15s, border-color 0.15s;
 }
-.af-study-tab:hover { color: #C8892A; }
-.af-study-tab.active { color: #C8892A; border-bottom-color: #C8892A; }
+.af-study-tab:hover { color: #0049FF; }
+.af-study-tab.active { color: #0049FF; border-bottom-color: #0049FF; }
 .af-study-panel { display: none; }
 .af-study-panel.active { display: block; }
 .af-study-panel p {
   font-size: 1rem; line-height: 1.7; color: #374151; margin: 0 0 1rem;
 }
 .af-section-title {
-  font-size: 1.15rem; font-weight: 800; color: #06003E; margin: 1.5rem 0 0.75rem;
+  font-size: 1.15rem; font-weight: 800; color: #1F2937; margin: 1.5rem 0 0.75rem;
 }
 .af-section-title:first-child { margin-top: 0; }
 .af-meta-card {
-  background: #F8FAFC; border: 1px solid #E5E7EB; border-radius: 8px;
+  background: #EEF3F7; border: 1px solid #E5E7EB; border-radius: 8px;
   padding: 1.1rem 1.15rem;
 }
 .af-meta-row {
@@ -80,21 +80,29 @@ body {
 }
 .af-meta-row:last-child { border-bottom: none; }
 .af-meta-label { color: #64748B; font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.06em; }
-.af-meta-value { color: #06003E; font-weight: 700; text-align: right; }
-.af-subtask-list { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.5rem; }
-.af-subtask-item {
-  border: 1px solid #E5E7EB; border-radius: 8px; background: #FFFFFF;
+.af-meta-value { color: #1F2937; font-weight: 700; text-align: right; }
+.af-subtask-table-wrap {
+  margin-top: 0.5rem; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;
+  background: #FFFFFF;
 }
-.af-subtask-item summary {
-  cursor: pointer; padding: 0.9rem 1rem; font-weight: 800; color: #06003E;
-  list-style: none; display: flex; justify-content: space-between; align-items: center;
+.af-subtask-table {
+  width: 100%; border-collapse: collapse; font-size: 0.95rem;
 }
-.af-subtask-item summary::-webkit-details-marker { display: none; }
-.af-subtask-item summary::after { content: '+'; color: #06003E; font-size: 1.2rem; font-weight: 700; }
-.af-subtask-item[open] summary::after { content: '×'; }
-.af-subtask-item summary:hover { color: #C8892A; }
-.af-subtask-body {
-  padding: 0 1rem 1rem; font-size: 0.95rem; line-height: 1.65; color: #374151;
+.af-subtask-table th {
+  text-align: left; padding: 0.7rem 1rem; background: #EEF3F7;
+  color: #64748B; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  border-bottom: 1px solid #E5E7EB;
+}
+.af-subtask-table td {
+  padding: 0.7rem 1rem; border-bottom: 1px solid #E5E7EB; color: #1F2937;
+  vertical-align: top;
+}
+.af-subtask-table tr:last-child td { border-bottom: none; }
+.af-subtask-table .af-subtask-name { font-weight: 700; }
+.af-subtask-table .af-subtask-prefix {
+  font-family: ui-monospace, monospace; font-weight: 600; color: #0D0D52;
+  white-space: nowrap;
 }
 .af-svyset {
   font-family: ui-monospace, monospace; font-size: 12px; color: #0F1F38;
@@ -105,7 +113,7 @@ body {
 
 .af-footer {
   padding: 0.9rem 2rem 1.5rem; font-size: 0.82rem; color: #9CA3AF;
-  border-top: 1px solid #E5E7EB; background: #FFFFFF;
+  border-top: 1px solid #E5E7EB; background: #EEF3F7;
 }
 .af-link-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 0.75rem; }
 .af-link-pill {
@@ -120,7 +128,7 @@ body {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   min-width: 64px; padding: 0.55rem 0.7rem; border-radius: 8px; text-align: center;
 }
-.af-id-segment.known { background: #100A78; color: #fff; }
+.af-id-segment.known { background: #0D0D52; color: #fff; }
 .af-id-segment.unknown {
   background: #F8FAFC; color: #94A3B8; border: 1.5px dashed #CBD5E1;
 }
@@ -144,8 +152,8 @@ body {
   background: #F8FAFC; color: #64748B; font-weight: 700; font-size: 0.72rem;
   text-transform: uppercase; letter-spacing: 0.05em;
 }
-.af-crosswalk-var { font-family: ui-monospace, monospace; font-weight: 700; color: #06003E; }
-.af-crosswalk-arrow { text-align: center; color: #C8892A; font-weight: 700; }
+.af-crosswalk-var { font-family: ui-monospace, monospace; font-weight: 700; color: #1F2937; }
+.af-crosswalk-arrow { text-align: center; color: #0049FF; font-weight: 700; }
 .af-code-tabs { display: flex; gap: 0.5rem; margin: 0.5rem 0 0; }
 .af-code-tab {
   background: #F8FAFC; border: 1px solid #E5E7EB; border-bottom: none;
@@ -204,12 +212,11 @@ body {
         <div id="panel-about" class="af-study-panel active">
           <p>From 2021 to 2023, the Nal’ibali Story Powered Schools (SPS) project aimed to foster a culture of reading for enjoyment among primary school learners in the Eastern Cape and KwaZulu-Natal provinces of South Africa. Designed and implemented by Nal’ibali, the project promoted reading in learners' home languages as well as English through a comprehensive school-based intervention. Activities included training teachers and community volunteers in reading-for-enjoyment approaches, providing age-appropriate reading materials, mentoring schools through regular support visits, establishing and supporting reading clubs, organising holiday reading programmes, and coordinating reading campaigns, events, and competitions. The project sought to strengthen reading habits and improve learners' engagement with reading both inside and outside the classroom.</p>
           <h2 class="af-section-title">Assessment Subtasks</h2>
-          <p style="color:#64748B; font-size:0.95rem; margin-bottom:1rem;">The subtasks included in this assessment survey are described below.</p>
           <p style="color:#94A3B8; font-style:italic;">Sub-task availability for this assessment survey is not yet listed in the variable availability matrix.</p>
         </div>
         <div id="panel-sampling" class="af-study-panel">
           <h2 class="af-section-title">Sampling Description</h2>
-          <p style="font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;">The Nal’ibali Story Powered Schools (SPS) evaluation employed a two-stage cluster sampling design within a school-level randomized controlled trial and was designed to estimate the causal impact of the intervention rather than produce nationally representative estimates. In the first stage, 360 primary schools in the Eastern Cape and KwaZulu-Natal provinces were randomly assigned to treatment and control groups. Baseline data collection was conducted over two cohorts (2017 and 2018), with endline data collected approximately two academic years later (2018 and 2019) using the same panel of schools and learners. In the second stage, approximately 30 learners from Grades 2, 3, and 4 were randomly selected within each school, yielding a baseline sample of 10,404 learners. Learners were followed longitudinally, with 8,774 successfully re-interviewed at endline. Assessments included selected Early Grade Reading Assessment (EGRA) subtasks and additional reading and writing exercises administered in isiXhosa and isiZulu. As an impact evaluation, the study was designed to estimate intervention effects within the trial sample rather than to produce population-representative estimates.</p>
+          <p style="font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;">The Nal’ibali Story Powered Schools (SPS) evaluation employed a two-stage cluster sampling design within a school-level randomized controlled trial and was designed to estimate the causal impact of the intervention rather than produce nationally representative estimates. In the first stage, 360 primary schools in the Eastern Cape and KwaZulu-Natal provinces were randomly assigned to treatment and control groups. Baseline data collection was conducted over two cohorts (2017 and 2018), with endline data collected approximately two academic years later (2018 and 2019) using the same panel of schools and learners. In the second stage, approximately 30 learners from Grades 2, 3, and 4 were randomly selected within each school, yielding a baseline sample of 10,404 learners. Learners were followed longitudinally, with 8,774 successfully re-interviewed at endline. Assessments included selected Early Grade Reading Assessment (EGRA) subtasks and additional reading and writing exercises administered in isiXhosa and isiZulu. As an impact evaluation, the study was designed to estimate intervention effects within the trial sample rather than to produce population-representative estimates. The harmonised pool contains 19171 pupil records.</p>
           <h2 class="af-section-title">Survey design (svyset)</h2>
           <p style="color:#94A3B8; font-style:italic;">— not specified —</p>
           <h2 class="af-section-title">Data files</h2>
@@ -348,7 +355,7 @@ linked &lt;- study_round |&gt;
           </div>
           <div class="af-meta-row">
             <span class="af-meta-label">Grade(s)</span>
-            <span class="af-meta-value">2, 3, 4</span>
+            <span class="af-meta-value">2, 3, 4, 5</span>
           </div>
           <div class="af-meta-row">
             <span class="af-meta-label">Language</span>

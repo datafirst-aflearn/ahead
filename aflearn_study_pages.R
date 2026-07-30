@@ -1235,21 +1235,21 @@ button.af-study-tab {
 }
 body {
   font-size: 16px;
-  background: #FFFFFF;
+  background: #EEF3F7;
   color: #1F2937;
   margin: 0; padding: 0;
 }
 .af-logobar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.85rem 2rem; background: #080056;
+  padding: 0.85rem 2rem; background: #0D0D52;
 }
 .af-logo-aflearn,
 .af-logo-datafirst {
   height: 96px; width: auto; max-width: 320px; object-fit: contain; display: block;
 }
 .af-study-hero {
-  background: #100A78; color: #fff; padding: 1.75rem 2rem 1.5rem;
-  border-bottom: 3px solid #080056;
+  background: #0D0D52; color: #fff; padding: 1.75rem 2rem 1.5rem;
+  border-bottom: 3px solid #0A0A42;
 }
 .af-study-hero h1 {
   margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 800; line-height: 1.25;
@@ -1257,7 +1257,7 @@ body {
 .af-back-link {
   color: #CBD5E1; text-decoration: none; font-size: 0.9rem; font-weight: 600;
 }
-.af-back-link:hover { color: #C8892A; }
+.af-back-link:hover { color: #0049FF; }
 .af-study-layout {
   display: grid; grid-template-columns: minmax(0, 1fr) 280px;
   gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 1.75rem 2rem 2.5rem;
@@ -1272,19 +1272,19 @@ body {
   font-family: var(--af-font); font-size: 1.05rem; font-weight: 800;
   color: #0F1F38; cursor: pointer; transition: color 0.15s, border-color 0.15s;
 }
-.af-study-tab:hover { color: #C8892A; }
-.af-study-tab.active { color: #C8892A; border-bottom-color: #C8892A; }
+.af-study-tab:hover { color: #0049FF; }
+.af-study-tab.active { color: #0049FF; border-bottom-color: #0049FF; }
 .af-study-panel { display: none; }
 .af-study-panel.active { display: block; }
 .af-study-panel p {
   font-size: 1rem; line-height: 1.7; color: #374151; margin: 0 0 1rem;
 }
 .af-section-title {
-  font-size: 1.15rem; font-weight: 800; color: #06003E; margin: 1.5rem 0 0.75rem;
+  font-size: 1.15rem; font-weight: 800; color: #1F2937; margin: 1.5rem 0 0.75rem;
 }
 .af-section-title:first-child { margin-top: 0; }
 .af-meta-card {
-  background: #F8FAFC; border: 1px solid #E5E7EB; border-radius: 8px;
+  background: #EEF3F7; border: 1px solid #E5E7EB; border-radius: 8px;
   padding: 1.1rem 1.15rem;
 }
 .af-meta-row {
@@ -1293,21 +1293,29 @@ body {
 }
 .af-meta-row:last-child { border-bottom: none; }
 .af-meta-label { color: #64748B; font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.06em; }
-.af-meta-value { color: #06003E; font-weight: 700; text-align: right; }
-.af-subtask-list { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.5rem; }
-.af-subtask-item {
-  border: 1px solid #E5E7EB; border-radius: 8px; background: #FFFFFF;
+.af-meta-value { color: #1F2937; font-weight: 700; text-align: right; }
+.af-subtask-table-wrap {
+  margin-top: 0.5rem; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;
+  background: #FFFFFF;
 }
-.af-subtask-item summary {
-  cursor: pointer; padding: 0.9rem 1rem; font-weight: 800; color: #06003E;
-  list-style: none; display: flex; justify-content: space-between; align-items: center;
+.af-subtask-table {
+  width: 100%; border-collapse: collapse; font-size: 0.95rem;
 }
-.af-subtask-item summary::-webkit-details-marker { display: none; }
-.af-subtask-item summary::after { content: '+'; color: #06003E; font-size: 1.2rem; font-weight: 700; }
-.af-subtask-item[open] summary::after { content: '\u00d7'; }
-.af-subtask-item summary:hover { color: #C8892A; }
-.af-subtask-body {
-  padding: 0 1rem 1rem; font-size: 0.95rem; line-height: 1.65; color: #374151;
+.af-subtask-table th {
+  text-align: left; padding: 0.7rem 1rem; background: #EEF3F7;
+  color: #64748B; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  border-bottom: 1px solid #E5E7EB;
+}
+.af-subtask-table td {
+  padding: 0.7rem 1rem; border-bottom: 1px solid #E5E7EB; color: #1F2937;
+  vertical-align: top;
+}
+.af-subtask-table tr:last-child td { border-bottom: none; }
+.af-subtask-table .af-subtask-name { font-weight: 700; }
+.af-subtask-table .af-subtask-prefix {
+  font-family: ui-monospace, monospace; font-weight: 600; color: #0D0D52;
+  white-space: nowrap;
 }
 .af-svyset {
   font-family: ui-monospace, monospace; font-size: 12px; color: #0F1F38;
@@ -1318,7 +1326,7 @@ body {
 
 .af-footer {
   padding: 0.9rem 2rem 1.5rem; font-size: 0.82rem; color: #9CA3AF;
-  border-top: 1px solid #E5E7EB; background: #FFFFFF;
+  border-top: 1px solid #E5E7EB; background: #EEF3F7;
 }
 .af-link-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 0.75rem; }
 .af-link-pill {
@@ -1333,7 +1341,7 @@ body {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   min-width: 64px; padding: 0.55rem 0.7rem; border-radius: 8px; text-align: center;
 }
-.af-id-segment.known { background: #100A78; color: #fff; }
+.af-id-segment.known { background: #0D0D52; color: #fff; }
 .af-id-segment.unknown {
   background: #F8FAFC; color: #94A3B8; border: 1.5px dashed #CBD5E1;
 }
@@ -1357,8 +1365,8 @@ body {
   background: #F8FAFC; color: #64748B; font-weight: 700; font-size: 0.72rem;
   text-transform: uppercase; letter-spacing: 0.05em;
 }
-.af-crosswalk-var { font-family: ui-monospace, monospace; font-weight: 700; color: #06003E; }
-.af-crosswalk-arrow { text-align: center; color: #C8892A; font-weight: 700; }
+.af-crosswalk-var { font-family: ui-monospace, monospace; font-weight: 700; color: #1F2937; }
+.af-crosswalk-arrow { text-align: center; color: #0049FF; font-weight: 700; }
 .af-code-tabs { display: flex; gap: 0.5rem; margin: 0.5rem 0 0; }
 .af-code-tab {
   background: #F8FAFC; border: 1px solid #E5E7EB; border-bottom: none;
@@ -1399,19 +1407,27 @@ body {
 landing_styles <- function() {
   HTML("
 <style>
-:root { --af-font: 'Source Sans 3', sans-serif; }
+:root {
+  --af-font: 'Source Sans 3', sans-serif;
+  --af-font-display: 'Inter', sans-serif;
+}
 *, *::before, *::after { box-sizing: border-box; }
 html, body { font-family: var(--af-font); }
 body {
   font-size: 16px;
-  background: #080056;
-  color: #FFFFFF;
+  background: #EEF3F7;
+  color: #0D0D52;
   margin: 0; padding: 0;
   min-height: 100vh;
 }
 .af-logobar {
+  background: #0D0D52;
+}
+.af-logobar-inner {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.85rem 2rem; background: #080056;
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  padding: 0.85rem 2rem;
+  box-sizing: border-box;
 }
 .af-logo-aflearn,
 .af-logo-datafirst {
@@ -1426,25 +1442,27 @@ body {
 }
 .af-landing-heading { flex: 1 1 480px; min-width: 0; }
 .af-landing-title {
-  margin: 0; font-size: 2.75rem; font-weight: 800; color: #FFFFFF;
-  letter-spacing: 0.04em; line-height: 1.1;
+  margin: 0; font-family: var(--af-font-display); font-size: 3rem; font-weight: 900; color: #0D0D52;
+  letter-spacing: 0.01em; line-height: 1.05;
 }
 .af-landing-subtitle {
-  margin: 0.4rem 0 0; font-size: 1.35rem; font-weight: 500; color: #CBD5E1; line-height: 1.35;
+  margin: 0.5rem 0 0; font-family: var(--af-font-display); font-size: 1.3rem; font-weight: 700;
+  color: #0D0D52; line-height: 1.35;
 }
 .af-landing-description {
-  margin: 1.1rem 0 0; font-size: 1.1rem; color: #94A3B8; line-height: 1.65; max-width: 75ch;
+  margin: 1.5rem 0 1.25rem; font-size: 1.1rem; color: rgba(13, 13, 82, 0.75); line-height: 1.65; max-width: 75ch;
+  text-align: justify;
 }
 .af-landing-stats {
-  margin: 0.85rem 0 0; font-size: 1.1rem; color: #CBD5E1; line-height: 1.65; max-width: 75ch;
+  margin: 0; font-size: 1.1rem; color: rgba(13, 13, 82, 0.75); line-height: 1.65; max-width: 75ch;
 }
-.af-landing-stats strong { color: #FFFFFF; font-weight: 700; }
+.af-landing-stats strong { color: #0D0D52; font-weight: 700; }
 .af-landing-meta {
   display: flex; flex-direction: column; align-items: flex-end; gap: 0.15rem;
   flex: 0 0 auto;
 }
-.af-meta-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.09em; color: #64748B; }
-.af-meta-value { font-size: 0.9rem; font-weight: 500; color: #94A3B8; }
+.af-meta-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.09em; color: rgba(13, 13, 82, 0.55); }
+.af-meta-value { font-size: 0.9rem; font-weight: 600; color: rgba(13, 13, 82, 0.85); }
 .af-landing-cards {
   max-width: 1200px;
   margin: 0 auto;
@@ -1461,30 +1479,39 @@ body {
   display: flex; flex-direction: column; gap: 0.6rem;
   padding: 1.75rem;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: #0E0C6A;
+  border: 1px solid #E5E7EB;
+  background: #FFFFFF;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(13, 13, 82, 0.06);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
-.af-card:hover { border-color: #C8892A; transform: translateY(-2px); }
-.af-card-icon { width: 40px; height: 40px; color: #C8892A; }
-.af-card-title { margin: 0; font-size: 1.3rem; font-weight: 800; color: #FFFFFF; }
+.af-card:hover {
+  border-color: #0049FF; transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(13, 13, 82, 0.12);
+}
+.af-card-icon { width: 40px; height: 40px; }
+.af-card-icon-primary { color: #0049FF; }
+.af-card-icon-secondary { color: #FFAD44; }
+.af-card-icon-tertiary { color: #0DD8F9; }
+.af-card-title {
+  margin: 0; font-family: var(--af-font-display); font-size: 1.3rem; font-weight: 800; color: #0D0D52;
+}
 .af-card-chip {
   display: inline-flex; align-self: flex-start;
   border-radius: 999px; padding: 0.2rem 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.06);
-  font-size: 0.78rem; font-weight: 700; color: #CBD5E1;
+  border: 1px solid #E5E7EB;
+  background: #EEF3F7;
+  font-size: 0.78rem; font-weight: 700; color: #0D0D52;
   text-transform: uppercase; letter-spacing: 0.06em;
 }
-.af-card-details { margin: 0; font-size: 0.98rem; line-height: 1.55; color: #94A3B8; }
+.af-card-details { margin: 0; font-size: 0.98rem; line-height: 1.55; color: rgba(13, 13, 82, 0.7); }
 .af-footer {
-  padding: 1.25rem 2rem 1.75rem; font-size: 0.82rem; color: #94A3B8;
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 1.25rem 2rem 1.75rem; font-size: 0.82rem; color: rgba(13, 13, 82, 0.65);
+  border-top: 1px solid #E5E7EB;
   max-width: 1200px; margin: 0 auto;
 }
-.af-footer a { color: #CBD5E1; }
+.af-footer a { color: #0D0D52; }
 </style>")
 }
 
@@ -1634,9 +1661,9 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
   datafirst_logo_src <- study_asset_url(row$study_slug, DATAFIRST_LOGO_FILE)
 
   # Prefer catalogue labels (incl. l2_/unt_ modifiers) when availability rows exist
-  subtask_items <- lapply(present_task_ids, function(task_id) {
+  subtask_rows <- lapply(present_task_ids, function(task_id) {
     title <- NULL
-    body <- ""
+    prefix <- as.character(task_id)
     if (!is.null(avail_long) && !is.null(row$survey_key)) {
       hits <- avail_long[
         avail_long$survey_key == row$survey_key &
@@ -1645,30 +1672,22 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
       ]
       if (nrow(hits)) {
         title <- hits$task_label[1]
-        body <- hits$description[1] %||% ""
+        prefix <- hits$task_id[1]
       }
     }
     if (is.null(title) || !nzchar(title)) {
       title <- task_label(task_id, desc_lookup, copy_lookup)
     }
-    if (!nzchar(body)) {
-      # Catalogue description lookup
-      dhit <- desc_lookup$description[
+    # Prefer the original (non-normalised) prefix from the catalogue when available
+    if (!is.null(desc_lookup) && "task_prefix" %in% names(desc_lookup)) {
+      phit <- desc_lookup$task_prefix[
         !is.na(desc_lookup$task_id) & desc_lookup$task_id == normalize_task_key(task_id)
       ]
-      if (length(dhit) && nzchar(dhit[1])) {
-        body <- dhit[1]
-      } else {
-        body <- task_description(task_id, copy_lookup)
-      }
+      if (length(phit) && nzchar(phit[1])) prefix <- phit[1]
     }
-    tags$details(
-      class = "af-subtask-item",
-      tags$summary(title),
-      tags$div(
-        class = "af-subtask-body",
-        if (nzchar(body)) tags$p(body) else tags$p(style = "color:#94A3B8; font-style:italic;", "Description coming soon.")
-      )
+    tags$tr(
+      tags$td(class = "af-subtask-name", title),
+      tags$td(class = "af-subtask-prefix", prefix)
     )
   })
 
@@ -1743,10 +1762,20 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
           tags$div(id = "panel-about", class = "af-study-panel active",
             tags$p(desc),
             tags$h2(class = "af-section-title", "Assessment Subtasks"),
-            tags$p(style = "color:#64748B; font-size:0.95rem; margin-bottom:1rem;",
-              "The subtasks included in this assessment survey are described below."),
-            if (length(subtask_items)) {
-              tags$div(class = "af-subtask-list", subtask_items)
+            if (length(subtask_rows)) {
+              tags$div(
+                class = "af-subtask-table-wrap",
+                tags$table(
+                  class = "af-subtask-table",
+                  tags$thead(
+                    tags$tr(
+                      tags$th("Sub-task"),
+                      tags$th("Prefix")
+                    )
+                  ),
+                  tags$tbody(subtask_rows)
+                )
+              )
             } else {
               tags$p(style = "color:#94A3B8; font-style:italic;",
                 "Sub-task availability for this assessment survey is not yet listed in the variable availability matrix.")
@@ -1916,7 +1945,7 @@ write_landing_page <- function(outfile,
       tags$link(rel = "preconnect", href = "https://fonts.googleapis.com"),
       tags$link(rel = "preconnect", href = "https://fonts.gstatic.com", crossorigin = NA),
       tags$link(
-        href = "https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap",
+        href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap",
         rel = "stylesheet"
       ),
       landing_styles()
@@ -1924,8 +1953,11 @@ write_landing_page <- function(outfile,
     tags$body(
       tags$div(
         class = "af-logobar",
-        tags$img(src = AFLEARN_LOGO_FILE, class = "af-logo-aflearn", alt = "AFLearn DataHub"),
-        tags$img(src = DATAFIRST_LOGO_FILE, class = "af-logo-datafirst", alt = "DataFirst, University of Cape Town")
+        tags$div(
+          class = "af-logobar-inner",
+          tags$img(src = AFLEARN_LOGO_FILE, class = "af-logo-aflearn", alt = "AFLearn DataHub"),
+          tags$img(src = DATAFIRST_LOGO_FILE, class = "af-logo-datafirst", alt = "DataFirst, University of Cape Town")
+        )
       ),
       tags$div(
         class = "af-landing-hero",
@@ -1953,27 +1985,63 @@ write_landing_page <- function(outfile,
         tags$a(
           class = "af-card", href = "catalogue.html",
           tags$svg(
-            class = "af-card-icon", viewBox = "0 0 40 40", fill = "none", `aria-hidden` = "true",
-            tags$path(d = "M8 12h24M8 20h24M8 28h24", stroke = "currentColor", `stroke-width` = "2.4", `stroke-linecap` = "round")
+            class = "af-card-icon af-card-icon-primary", viewBox = "0 0 24 24", fill = "none", `aria-hidden` = "true",
+            tags$path(d = "M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round", `stroke-linejoin` = "round"),
+            tags$path(d = "M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round", `stroke-linejoin` = "round")
           ),
           tags$h3(class = "af-card-title", "Explore AHEAD catalogue"),
           tags$span(class = "af-card-chip", "Catalogue"),
           tags$p(
             class = "af-card-details",
-            glue("Browse {n_surveys} assessment surveys across {n_countries} countries \u2014 filter by year, grade, language, sub-task, and study type.")
+            glue("Browse {n_surveys} assessment surveys across {n_countries} countries. Filter by year, grade, language, sub-task, and study type.")
           )
         ),
         tags$a(
           class = "af-card", href = harmonised_data_url, target = "_blank", rel = "noopener",
           tags$svg(
-            class = "af-card-icon", viewBox = "0 0 40 40", fill = "none", `aria-hidden` = "true",
-            tags$path(d = "M20 8v16M13 17l7 7 7-7M10 30h20", stroke = "currentColor", `stroke-width` = "2.4", `stroke-linecap` = "round", `stroke-linejoin` = "round")
+            class = "af-card-icon af-card-icon-secondary", viewBox = "0 0 24 24", fill = "none", `aria-hidden` = "true",
+            tags$line(x1 = "5", y1 = "20", x2 = "5", y2 = "12", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round"),
+            tags$line(x1 = "12", y1 = "20", x2 = "12", y2 = "4", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round"),
+            tags$line(x1 = "19", y1 = "20", x2 = "19", y2 = "9", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round"),
+            tags$line(x1 = "2", y1 = "20", x2 = "22", y2 = "20", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round")
           ),
           tags$h3(class = "af-card-title", "Access AHEAD dataset"),
           tags$span(class = "af-card-chip", "Dataset"),
           tags$p(
             class = "af-card-details",
             "Download the harmonised microdata and documentation from the DataFirst Data Portal."
+          )
+        ),
+        tags$a(
+          class = "af-card", href = "guide/index.html",
+          tags$svg(
+            class = "af-card-icon af-card-icon-tertiary", viewBox = "0 0 24 24", fill = "none", `aria-hidden` = "true",
+            tags$rect(x = "3", y = "15.5", width = "18", height = "4", rx = "1", stroke = "currentColor", `stroke-width` = "1.6"),
+            tags$rect(x = "4.5", y = "10.5", width = "15", height = "4", rx = "1", stroke = "currentColor", `stroke-width` = "1.6"),
+            tags$rect(x = "6", y = "5.5", width = "12", height = "4", rx = "1", stroke = "currentColor", `stroke-width` = "1.6")
+          ),
+          tags$h3(class = "af-card-title", "AHEAD User Guide"),
+          tags$span(class = "af-card-chip", "Guide"),
+          tags$p(
+            class = "af-card-details",
+            "Learn how the AHEAD is structured"
+          )
+        ),
+        tags$a(
+          class = "af-card", href = "guide/ch06-egra-egma-subtask-variables.html",
+          tags$svg(
+            class = "af-card-icon af-card-icon-primary", viewBox = "0 0 24 24", fill = "none", `aria-hidden` = "true",
+            tags$rect(x = "4", y = "3", width = "16", height = "11", rx = "1.2", stroke = "currentColor", `stroke-width` = "1.6"),
+            tags$path(d = "M7 7.5h10", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round"),
+            tags$path(d = "M7 10.5h6", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round"),
+            tags$path(d = "M7 14 3 21", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round"),
+            tags$path(d = "M17 14 21 21", stroke = "currentColor", `stroke-width` = "1.6", `stroke-linecap` = "round")
+          ),
+          tags$h3(class = "af-card-title", "Understanding EGRA & EGMA sub-tasks"),
+          tags$span(class = "af-card-chip", "Guide"),
+          tags$p(
+            class = "af-card-details",
+            "A quick reference to the reading and numeracy sub-tasks that make up the EGRA and EGMA assessments."
           )
         )
       ),

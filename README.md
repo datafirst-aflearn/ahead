@@ -7,8 +7,8 @@ Published output for GitHub Pages lives in **`docs/`**.
 
 1. Open **`aflearn-site.Rproj`** in RStudio.
 2. Place these data files in the project root (same folder as the `.qmd` files):
-   - **`ahead-catalogue-v1.xlsx`** — primary catalogue (home page, projects, surveys, subtasks, sampling, linking)
-   - **`EGRA_Harmonization_Waves_Details.xlsx`** — still used for per-survey grade values (the catalogue stores grades at project level only)
+   - **`ahead-catalogue-v1.1.xlsx`** — primary catalogue (home page, projects, surveys, subtasks, sampling, linking)
+   - **`EGRA_Harmonization_Waves_Details.xlsx`** — optional fallback for per-survey grade values when not present in the catalogue
 3. Install R packages once:
 
 ```r
@@ -101,7 +101,7 @@ git commit -m "Update study rounds site"
 git push
 ```
 
-> **Note:** `variable-availability-matrix.xlsx` and `build_variable_availability_matrix.py` are no longer used by the site build. Subtask availability now comes from the `assessment-subtasks` and `subtask-descriptions` sheets in `ahead-catalogue-v1.xlsx`.
+> **Note:** `variable-availability-matrix.xlsx` and `build_variable_availability_matrix.py` are no longer used by the site build. Subtask availability now comes from the `assessment-subtasks` and `subtask-descriptions` sheets in `ahead-catalogue-v1.1.xlsx`.
 
 ## Project layout
 
@@ -111,8 +111,8 @@ aflearn-site/
 ├── aflearn_study_pages.R             # Landing page, study detail page & CSS generators
 ├── render_site.R                     # One-command render → docs/
 ├── _quarto.yml                       # Output directory: docs/
-├── ahead-catalogue-v1.xlsx           # Primary catalogue (required)
-├── EGRA_Harmonization_Waves_Details.xlsx  # Per-survey grades (optional but recommended)
+├── ahead-catalogue-v1.1.xlsx         # Primary catalogue (required)
+├── EGRA_Harmonization_Waves_Details.xlsx  # Per-survey grades (optional fallback)
 ├── docs/                             # ← GitHub Pages publish root (committed)
 │   ├── index.html                    # Landing page (write_landing_page())
 │   ├── catalogue.html                # Browse page (quarto_render output)

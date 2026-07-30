@@ -36,15 +36,18 @@ source("aflearn_study_pages.R")
 
 # Primary catalogue (home page, projects, surveys, subtasks, sampling, linking)
 CATALOGUE_CANDIDATES <- c(
+  "ahead-catalogue-v1.1.xlsx",
+  file.path("data", "ahead-catalogue-v1.1.xlsx"),
   "ahead-catalogue-v1.xlsx",
   file.path("data", "ahead-catalogue-v1.xlsx")
 )
 EXCEL_PATH <- CATALOGUE_CANDIDATES[file.exists(CATALOGUE_CANDIDATES)][1]
 if (is.na(EXCEL_PATH)) {
-  stop("ahead-catalogue-v1.xlsx not found in project root or data/.")
+  stop("ahead-catalogue-v1.1.xlsx (or ahead-catalogue-v1.xlsx) not found in project root or data/.")
 }
 
-# Legacy workbook: still used only for per-survey grade (new catalogue lacks a grade column)
+# Legacy workbook: optional fallback for per-survey grades
+# (v1.1 catalogue also provides grades via assessment-surveys-external)
 GRADES_CANDIDATES <- c(
   "EGRA_Harmonization_Waves_Details.xlsx",
   file.path("data", "EGRA_Harmonization_Waves_Details.xlsx")
@@ -64,11 +67,15 @@ DATAFIRST_LOGO_PATH <- "DataFirst and UCT logo.png"
 publish_site_logos(PUBLISH_DIR, AFLEARN_LOGO_PATH, DATAFIRST_LOGO_PATH)
 
 HARMONISED_DATA_URL <- "https://doi.org/10.25828/2287-mw84"
-AF_NAVY_L1 <- "#080056"  # logo bar (darkest layer)
-AF_NAVY_L2 <- "#100A78"  # header / hero (lighter navy)
-AF_NAVY    <- "#06003E"  # body text / accents
-AF_GOLD    <- "#C8892A"
-AF_BLUE    <- "#1B6FD8"
+AF_OFFWHITE <- "#EEF3F7" # base surface (60%) - dominant background
+AF_NAVY_L1 <- "#0D0D52"  # banners / pullouts only (30%) - not for running text
+AF_NAVY_L2 <- "#0D0D52"  # banners / pullouts only (30%) - not for running text
+AF_NAVY    <- "#0D0D52"  # banners / pullouts only (30%) - not for running text
+AF_INK     <- "#1F2937"  # neutral dark text/ink (reading text, not a brand color)
+AF_GOLD    <- "#0049FF"  # primary accent (10%) - sharp pop only
+AF_BLUE    <- "#0049FF"  # primary accent (10%) - sharp pop only
+AF_ORANGE  <- "#FFAD44"  # secondary accent (10%)
+AF_CYAN    <- "#0DD8F9"  # tertiary accent (10%)
 
 format_grades <- function(sheet_val, file_val = NA_character_) {
   if (!is.na(sheet_val) && sheet_val != "") {
@@ -220,39 +227,82 @@ if (!is.na(GRADES_PATH)) {
   if (!is.null(legacy_raw)) {
     names(legacy_raw) <- clean_header_names(names(legacy_raw))
     grade_col <- names(legacy_raw)[grep("^grade", names(legacy_raw), ignore.case = TRUE)][1]
+    proj_col  <- names(legacy_raw)[grep("^project", names(legacy_raw), ignore.case = TRUE)][1]
+    round_col <- names(legacy_raw)[grep("^round", names(legacy_raw), ignore.case = TRUE)][1]
+    year_col  <- names(legacy_raw)[grep("(data_collection_year|^year$)", names(legacy_raw), ignore.case = TRUE)][1]
     legacy_grades <- legacy_raw |>
       filter(!is.na(country_iso) & country_iso != "") |>
       transmute(
         ISO = normalize_iso_code(country_iso),
-        Code = str_pad(as.character(project), 3, pad = "0"),
-        Round = as.character(Round),
-        Year = as.character(data_collection_year),
+        Code = str_pad(as.character(.data[[proj_col]]), 3, pad = "0"),
+        Round = as.character(.data[[round_col]]),
+        Year = as.character(.data[[year_col]]),
         Source = str_trim(as.character(source)),
         Grade_legacy = .data[[grade_col]]
       )
   }
 }
 
+# Grades from catalogue external sheet (v1.1+)
+catalogue_grades <- NULL
+catalogue_grades_raw <- tryCatch(
+  read_excel_sheet_any(EXCEL_PATH, c("assessment-surveys-external")),
+  error = function(e) NULL
+)
+if (!is.null(catalogue_grades_raw)) {
+  names(catalogue_grades_raw) <- clean_header_names(names(catalogue_grades_raw))
+  g_col <- names(catalogue_grades_raw)[grep("^grade", names(catalogue_grades_raw), ignore.case = TRUE)][1]
+  p_col <- names(catalogue_grades_raw)[grep("^project", names(catalogue_grades_raw), ignore.case = TRUE)][1]
+  r_col <- names(catalogue_grades_raw)[grep("^round", names(catalogue_grades_raw), ignore.case = TRUE)][1]
+  y_col <- names(catalogue_grades_raw)[grep("(data_collection_year|^year$)", names(catalogue_grades_raw), ignore.case = TRUE)][1]
+  iso_col <- names(catalogue_grades_raw)[grep("country_iso", names(catalogue_grades_raw), ignore.case = TRUE)][1]
+  if (!is.na(g_col) && !is.na(p_col) && !is.na(r_col) && !is.na(y_col) && !is.na(iso_col)) {
+    catalogue_grades <- catalogue_grades_raw |>
+      filter(!is.na(.data[[iso_col]]) & .data[[iso_col]] != "") |>
+      transmute(
+        ISO = normalize_iso_code(.data[[iso_col]]),
+        Code = str_pad(as.character(.data[[p_col]]), 3, pad = "0"),
+        Round = as.character(.data[[r_col]]),
+        Year = as.character(.data[[y_col]]),
+        Grade_catalogue = as.character(.data[[g_col]])
+      ) |>
+      filter(!is.na(Grade_catalogue) & Grade_catalogue != "") |>
+      group_by(ISO, Code, Round, Year) |>
+      summarise(Grade_catalogue = dplyr::first(Grade_catalogue), .groups = "drop")
+  }
+}
+
 # ── Read study rounds sheet ───────────────────────────────────────────────────
-rounds_raw <- read_excel_sheet_any(EXCEL_PATH, c("assessment-surveys", "Study_rounds"))
+# v1.1 splits this into assessment-surveys-internal / -external; prefer internal
+# (keeps Rwanda grade-specific and Uganda language-specific rows).
+rounds_raw <- read_excel_sheet_any(
+  EXCEL_PATH,
+  c("assessment-surveys-internal", "assessment-surveys", "Study_rounds")
+)
 names(rounds_raw) <- clean_header_names(names(rounds_raw))
 
-# Language column may be "Language" or "Language "
-lang_col <- names(rounds_raw)[grep("^language", names(rounds_raw), ignore.case = TRUE)][1]
+# Flexible column names across v1 / v1.1 sheet variants
+proj_col  <- names(rounds_raw)[grep("^project", names(rounds_raw), ignore.case = TRUE)][1]
+round_col <- names(rounds_raw)[grep("^round", names(rounds_raw), ignore.case = TRUE)][1]
+year_col  <- names(rounds_raw)[grep("(data_collection_year|^year$)", names(rounds_raw), ignore.case = TRUE)][1]
+lang_col  <- names(rounds_raw)[grep("^language", names(rounds_raw), ignore.case = TRUE)][1]
+grade_col_rounds <- names(rounds_raw)[grep("^grade", names(rounds_raw), ignore.case = TRUE)][1]
+iso_col   <- names(rounds_raw)[grep("country_iso", names(rounds_raw), ignore.case = TRUE)][1]
 
 rounds <- rounds_raw |>
-  filter(!is.na(country_iso) & country_iso != "") |>
+  filter(!is.na(.data[[iso_col]]) & .data[[iso_col]] != "") |>
   mutate(
-    ISO           = normalize_iso_code(country_iso),
-    Code          = str_pad(as.character(project), 3, pad = "0"),
-    Round         = as.character(Round),
-    Year          = as.character(data_collection_year),
+    ISO           = normalize_iso_code(.data[[iso_col]]),
+    Code          = str_pad(as.character(.data[[proj_col]]), 3, pad = "0"),
+    Round         = as.character(.data[[round_col]]),
+    Year          = as.character(.data[[year_col]]),
     Svyset        = svyset,
     RCT           = svy_rct,
     DataFile_text = datafile_location,
     Codebook_text = codebook_location,
     Source        = str_trim(as.character(source)),
-    Language_raw  = .data[[lang_col]],
+    Language_raw  = if (!is.na(lang_col)) .data[[lang_col]] else NA_character_,
+    Grade_in_sheet = if (!is.na(grade_col_rounds)) as.character(.data[[grade_col_rounds]]) else NA_character_,
     Comments      = comments,
     proj_key      = paste0(ISO, "_", Code),
     across(c(RCT, Comments), ~ifelse(is.na(.) | . == "", "—", .)),
@@ -261,7 +311,12 @@ rounds <- rounds_raw |>
     Codebook_text = str_trim(ifelse(is.na(Codebook_text) | Codebook_text == "", "—", Codebook_text)),
     DataFile_url  = datafile_urls[Source],
     Codebook_url  = codebook_urls[Source],
-    Languages     = format_languages(Language_raw)
+    Languages     = format_languages(Language_raw),
+    # Grade hint from source keys like rwanda_2018_g2
+    Grade_from_source = {
+      m <- stringr::str_match(Source, "(?i)_g(\\d+)\\b")[, 2]
+      ifelse(is.na(m), NA_character_, paste0("g", m))
+    }
   )
 
 # Attach legacy per-survey grades (match on ISO+Code+Round+Year+Source when possible)
@@ -294,6 +349,25 @@ if (!is.null(legacy_grades)) {
       select(-Grade_legacy2)
   }
 }
+
+# Catalogue external grades (v1.1), then in-sheet / source-key hints
+if (!is.null(catalogue_grades)) {
+  rounds <- rounds |>
+    left_join(catalogue_grades, by = c("ISO", "Code", "Round", "Year"))
+} else {
+  rounds$Grade_catalogue <- NA_character_
+}
+
+rounds <- rounds |>
+  mutate(
+    Grade_legacy = dplyr::coalesce(
+      na_if(Grade_legacy, ""),
+      na_if(Grade_from_source, ""),
+      na_if(Grade_in_sheet, ""),
+      na_if(Grade_catalogue, "")
+    )
+  ) |>
+  select(-Grade_from_source, -Grade_in_sheet, -Grade_catalogue)
 
 file_mod     <- file.info(EXCEL_PATH)$mtime
 last_updated <- format(file_mod, "%d %B %Y, %H:%M")
@@ -517,7 +591,7 @@ truncate_cell <- function(text, max_chars = 220) {
              "else{{r.style.display='none';e.style.display='inline';a.textContent='Read more';}}",
              "return false;"
            ),
-           style = paste0("font-size:11px; color:", AF_NAVY, "; margin-left:3px; text-decoration:none; font-weight:700;"))
+           style = paste0("font-size:11px; color:", AF_BLUE, "; margin-left:3px; text-decoration:none; font-weight:700;"))
   )
 }
 
@@ -584,8 +658,8 @@ row_arrow_icon <- function() {
   paste0(
     '<svg class="af-row-arrow-svg" xmlns="http://www.w3.org/2000/svg" ',
     'width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">',
-    '<path d="M4 12h13" stroke="#C8892A" stroke-width="2.5" stroke-linecap="round"/>',
-    '<path d="M13 7l6 5-6 5" fill="#C8892A" stroke="#C8892A" ',
+    '<path d="M4 12h13" stroke="#0049FF" stroke-width="2.5" stroke-linecap="round"/>',
+    '<path d="M13 7l6 5-6 5" fill="#0049FF" stroke="#0049FF" ',
     'stroke-width="1.5" stroke-linejoin="round"/>',
     '</svg>'
   )
@@ -666,7 +740,7 @@ browse_table <- reactable(
                          headerStyle = HDR_STYLE, show = FALSE),
 
   theme = reactableTheme(
-    backgroundColor  = "#FFFFFF",
+    backgroundColor  = "#EEF3F7",
     borderColor      = "#E5E7EB",
     highlightColor   = "#F3F4F6",
     cellPadding      = "10px 12px",
@@ -688,7 +762,7 @@ browse_table <- reactable(
       headerStyle = c(HDR_STYLE, list(flex = "0 0 80px", minWidth = "80px", width = "80px")),
       style = list(
         flex = "0 0 80px",
-        color = AF_NAVY, fontWeight = "700",
+        color = AF_INK, fontWeight = "700",
         whiteSpace = "nowrap", fontVariantNumeric = "tabular-nums"
       )
     ),
@@ -720,7 +794,7 @@ browse_table <- reactable(
       cell = function(v) {
         if (is.na(v) || v == "—")
           return(span("—", style = "color:#CBD5E0; font-size:11px;"))
-        span(v, style = paste0("font-size:14px; color:", AF_NAVY, "; font-weight:700; white-space:nowrap;"))
+        span(v, style = paste0("font-size:14px; color:", AF_INK, "; font-weight:700; white-space:nowrap;"))
       }
     ),
     Assessment = colDef(
@@ -730,7 +804,7 @@ browse_table <- reactable(
       cell = function(v) {
         if (is.na(v) || v == "" || v == "—")
           return(span("—", style = "color:#CBD5E0; font-size:11px;"))
-        span(v, style = paste0("font-size:14px; color:", AF_NAVY, "; font-weight:700; white-space:nowrap;"))
+        span(v, style = paste0("font-size:14px; color:", AF_INK, "; font-weight:700; white-space:nowrap;"))
       }
     ),
     Row_arrow = colDef(
@@ -890,7 +964,7 @@ input, button, select, textarea,
 
 body {
   font-size: 16px;
-  background: #FFFFFF;
+  background: #EEF3F7;
   color: #1F2937;
   margin: 0; padding: 0;
 }
@@ -903,13 +977,13 @@ body {
   margin: 0 !important;
 }
 
-/* ── Logo bar (layer 1 — darkest navy) ───────────────────────────────────── */
+/* ── Logo bar (brand navy) ───────────────────────────────────────────────── */
 .af-logobar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.85rem 2rem;
-  background: #080056;
+  background: #0D0D52;
 }
 .af-logo-aflearn,
 .af-logo-datafirst {
@@ -920,11 +994,11 @@ body {
   display: block;
 }
 
-/* ── Sub-nav strip (layer 2 — lighter navy) ─────────────────────────────────── */
+/* ── Sub-nav strip (brand navy) ─────────────────────────────────────────────── */
 .af-subnav {
-  background: #100A78;
+  background: #0D0D52;
   padding: 0.9rem 2rem;
-  border-bottom: 3px solid #080056;
+  border-bottom: 3px solid #0A0A42;
   display: flex; align-items: center;
   justify-content: space-between; flex-wrap: wrap;
   gap: 1rem;
@@ -932,7 +1006,7 @@ body {
 .af-back-link {
   color: #CBD5E1; text-decoration: none; font-size: 0.95rem; font-weight: 600;
 }
-.af-back-link:hover { color: #C8892A; }
+.af-back-link:hover { color: #0049FF; }
 .af-subnav-actions {
   display: flex; align-items: center; gap: 1.25rem;
 }
@@ -945,12 +1019,12 @@ body {
 .af-cta-btn {
   font-family: var(--af-font);
   font-size: 0.95rem; font-weight: 800;
-  color: #06003E; background: #FFFFFF;
+  color: #FFFFFF; background: #0049FF;
   padding: 0.6rem 1.15rem; border-radius: 6px;
   text-decoration: none; white-space: nowrap;
   transition: background 0.15s;
 }
-.af-cta-btn:hover { background: #EFF6FF; color: #0A0058; }
+.af-cta-btn:hover { background: #0040E6; color: #FFFFFF; }
 .af-meta     { display: flex; flex-direction: column; align-items: flex-end; gap: 0.15rem; }
 .af-meta-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.09em; color: #64748B; }
 .af-meta-value { font-size: 0.9rem; font-weight: 500; color: #94A3B8; }
@@ -974,14 +1048,14 @@ body {
   display: flex;
   align-items: stretch;
   min-height: 60vh;
-  background: #FFFFFF;
+  background: #EEF3F7;
 }
 .af-sidebar {
   width: 480px;
   flex-shrink: 0;
   padding: 1.25rem 1.1rem 1.5rem;
   border-right: 1px solid #E5E7EB;
-  background: #FFFFFF;
+  background: #EEF3F7;
 }
 .af-sidebar-title {
   font-size: 1.05rem;
@@ -1007,24 +1081,24 @@ body {
   padding: 10px 42px 10px 12px;
   border: 1px solid #D1D5DB;
   border-radius: 0;
-  background: #FFFFFF;
+  background: #EEF3F7;
   outline: none;
 }
 .af-search-input::placeholder { color: #9CA3AF; }
-.af-search-input:focus { border-color: #06003E; }
+.af-search-input:focus { border-color: #0DD8F9; }
 .af-search-icon {
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #06003E;
+  color: #1F2937;
   pointer-events: none;
   display: flex;
   align-items: center;
   line-height: 0;
 }
 .af-main-title {
-  background: #100A78;
+  background: #0D0D52;
   color: #FFFFFF;
   font-size: 1.5rem;
   font-weight: 800;
@@ -1034,7 +1108,7 @@ body {
 .af-main {
   flex: 1;
   min-width: 0;
-  background: #FFFFFF;
+  background: #EEF3F7;
   display: flex;
   flex-direction: column;
 }
@@ -1071,11 +1145,11 @@ body {
   text-transform: uppercase;
   color: #0F1F38;
 }
-.af-filter-toggle:hover .af-filter-icon { color: #C8892A !important; }
+.af-filter-toggle:hover .af-filter-icon { color: #0049FF !important; }
 .af-filter-icon {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #06003E;
+  color: #1F2937;
   line-height: 1;
   min-width: 1.25rem;
   text-align: center;
@@ -1111,7 +1185,7 @@ body {
 .af-crosstalk .crosstalk-input-checkboxgroup input[type="checkbox"] {
   width: 15px;
   height: 15px;
-  accent-color: #06003E;
+  accent-color: #0049FF;
   cursor: pointer;
 }
 
@@ -1141,7 +1215,7 @@ body {
 }
 .rt-th {
   background: transparent !important;
-  color: #06003E !important;
+  color: #1F2937 !important;
   font-size: 0.78rem !important;
   font-weight: 800 !important;
   font-family: var(--af-font) !important;
@@ -1191,20 +1265,20 @@ body {
   flex-shrink: 0 !important;
 }
 .rt-th:last-child  { border-right: none !important; }
-.rt-th:hover       { background: transparent !important; color: #06003E !important; }
-.rt-th-sort-icon   { color: #06003E !important; opacity: 0.85; }
+.rt-th:hover       { background: transparent !important; color: #1F2937 !important; }
+.rt-th-sort-icon   { color: #1F2937 !important; opacity: 0.85; }
 .rt-th[aria-sort="ascending"],
 .rt-th[aria-sort="descending"] {
-  color: #C8892A !important;
+  color: #0049FF !important;
 }
 .rt-th[aria-sort="ascending"] .rt-th-sort-icon,
 .rt-th[aria-sort="descending"] .rt-th-sort-icon {
-  color: #C8892A !important;
+  color: #0049FF !important;
   opacity: 1;
 }
 .rt-th[aria-sort="ascending"]:hover,
 .rt-th[aria-sort="descending"]:hover {
-  color: #C8892A !important;
+  color: #0049FF !important;
 }
 
 /* ── Body rows ────────────────────────────────────────────────────────────── */
@@ -1226,7 +1300,7 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
-.af-study-link:hover { color: #1B6FD8 !important; text-decoration: underline !important; }
+.af-study-link:hover { color: #0049FF !important; text-decoration: underline !important; }
 
 /* Keep compact columns from wrapping */
 .rt-th[style*="flex: 0 0"],
@@ -1240,7 +1314,7 @@ body {
   padding: 0.9rem 2rem 1.5rem;
   font-size: 0.82rem; color: #9CA3AF;
   border-top: 1px solid #E5E7EB;
-  background: #FFFFFF;
+  background: #EEF3F7;
 }
 .af-footer code {
   font-family: ui-monospace, monospace;
@@ -1300,8 +1374,8 @@ if (window.HTMLWidgets) {
   <strong>AHEAD — African Harmonised Early-Grade Assessments Data</strong> ·
   DataFirst, University of Cape Town ·
   Access the harmonised dataset via the
-  <a href="https://www.datafirst.uct.ac.za/dataportal/index.php" target="_blank" style="color:#06003E; text-decoration:none;">DataFirst Data Portal</a> ·
-  Source files via <a href="https://www.datalumos.org" target="_blank" style="color:#06003E; text-decoration:none;">DataLumos</a> ·
-  For queries contact <a href="mailto:datafirst@uct.ac.za" style="color:#06003E; text-decoration:none;">datafirst@uct.ac.za</a>
+  <a href="https://www.datafirst.uct.ac.za/dataportal/index.php" target="_blank" style="color:#1F2937; text-decoration:none;">DataFirst Data Portal</a> ·
+  Source files via <a href="https://www.datalumos.org" target="_blank" style="color:#1F2937; text-decoration:none;">DataLumos</a> ·
+  For queries contact <a href="mailto:datafirst@uct.ac.za" style="color:#1F2937; text-decoration:none;">datafirst@uct.ac.za</a>
 </div>
 ```

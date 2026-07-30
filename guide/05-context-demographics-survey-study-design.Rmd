@@ -1,0 +1,192 @@
+# Context: demographics, survey and study designs {#ch05-context-demographics-survey-study-design}
+
+The pooled dataset contains both harmonized EGRA and EGMA assessment variables and a set of harmonized contextual variables describing pupils, schools, survey design, and study characteristics.
+
+While the assessment variables are discussed later in this document, this section focuses on the contextual variable groups. These variables provide the information required to identify individual projects, account for differences in sampling and assessment contexts, and support appropriate comparative analyses.
+
+The following subsections provide guidance on their interpretation and use, while detailed variable labels, coding schemes, and frequencies remain available in the accompanying DDI codebook.
+
+## Demographics and pupil context
+
+The harmonized dataset contains demographic and pupil context variables describing learner characteristics, assessment context, and identifiers.
+
+```{=html}
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Variable</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>gender</code></td>
+    <td>Pupil gender</td>
+  </tr>
+  <tr>
+    <td><code>grade</code></td>
+    <td>Grade / class level</td>
+  </tr>
+  <tr>
+    <td><code>age</code></td>
+    <td>Pupil age (continuous)</td>
+  </tr>
+  <tr>
+    <td><code>location</code></td>
+    <td>Urban / rural</td>
+  </tr>
+  <tr>
+    <td><code>lang_home</code></td>
+    <td>Home language</td>
+  </tr>
+  <tr>
+    <td><code>lang_assessment</code></td>
+    <td>Language of assessment</td>
+  </tr>
+  <tr>
+    <td><code>lang_instruction</code></td>
+    <td>Language of instruction</td>
+  </tr>
+  <tr>
+    <td><code>lang2_assessment</code></td>
+    <td>Second language of assessment</td>
+  </tr>
+  <tr>
+    <td><code>year</code>, <code>month</code></td>
+    <td>Assessment year and month</td>
+  </tr>
+  <tr>
+    <td><code>school_id</code>, <code>student_id</code></td>
+    <td>School and pupil identifiers (unique within each country, project and round combination)</td>
+  </tr>
+  <tr>
+    <td><code>consent</code></td>
+    <td>Consent / assent flag</td>
+  </tr>
+</table>
+</div>
+```
+
+*Table 2: Demographic variables in the dataset*
+
+### Important considerations
+
+**Pooling across studies:** Use the harmonized country variable for country-level analyses. Individual constituent studies are uniquely identified by a combination of country, project, and round, which should be used when distinguishing between specific survey iterations.
+
+**Sparsity:** Not every study collected every contextual variable. Before conducting pooled analyses, users should consult the interactive data browser on the AFLEARN website.
+
+**Grade:** Although grade values have been harmonized to a common set of labels, the distribution of grades varies across projects or individual studies. Users should make comparisons with reference to each project's stated target population and design. Note that the same grade label does not imply equivalent curricula or learning expectations across countries.
+
+**Age:** Age is retained as a continuous variable wherever possible. Missing or non-response values follow the harmonized missing-value conventions described in [Missing values and unresolved codes](09-missing-values.html).
+
+**Location:** Urban/rural coding is harmonized where collected. However, not all projects distinguish location.
+
+**Identifiers:** The harmonized variables `school_id` and `student_id` are copied directly from the original datasets and are meaningful only within their individual studies. They should not be used to link observations across studies or survey rounds. The pooled dataset includes the harmonized identifier `harm_student_id`, described in [Identifiers](08-identifiers.html).
+
+## Survey design, weights, and geography
+
+The dataset includes a set of variables describing the sampling design, geographic coverage, and survey structure of each project. These variables enable users to correctly account for survey design when conducting weighted analyses and to identify the geographic context of each project.
+
+```{=html}
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Variable(s)</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>country</code></td>
+    <td>Country</td>
+  </tr>
+  <tr>
+    <td><code>year</code></td>
+    <td>Year</td>
+  </tr>
+  <tr>
+    <td><code>admin_div1</code>&ndash;<code>admin_div3</code></td>
+    <td>Administrative division codes are provided for up to three hierarchical levels. The administrative units represented at each level vary by country&mdash;for example, provinces and counties in Kenya, and divisions and subdivisions in the DRC.</td>
+  </tr>
+  <tr>
+    <td><code>admin_div1_type</code>&ndash;<code>admin_div3_type</code></td>
+    <td>Name of each administrative level in this study (e.g. province, county, division, region, district) &mdash; separates the code from what the level is called.</td>
+  </tr>
+  <tr>
+    <td><code>sample_design_stages</code></td>
+    <td>Number of sampling stages in the survey design.</td>
+  </tr>
+  <tr>
+    <td><code>stage1</code>&ndash;<code>stage4</code></td>
+    <td>Sampling unit (SU / cluster) at each stage.</td>
+  </tr>
+  <tr>
+    <td><code>strata1</code>&ndash;<code>strata4</code></td>
+    <td>Stratification grouping at each stage.</td>
+  </tr>
+  <tr>
+    <td><code>fpc1</code>&ndash;<code>fpc4</code></td>
+    <td>Finite-population correction (FPC) factor at each stage.</td>
+  </tr>
+  <tr>
+    <td><code>wt1</code>&ndash;<code>wt4</code></td>
+    <td>Stage weights</td>
+  </tr>
+  <tr>
+    <td><code>wt_final</code></td>
+    <td>Final weight &mdash; use this for design-based estimation.</td>
+  </tr>
+</table>
+</div>
+```
+
+*Table 3: Harmonized survey-design and geography variables*
+
+### Important considerations
+
+**Harmonized names, project-specific contents:** Survey design variables share common names across projects, but values are individual study-specific.
+
+**Within-survey rule:** Design variables and weights must be used one study at a time. Never declare a survey design on the full harmonized file.
+
+**Multistage design variables:** The number of applicable stages, strata, fpc, and stage-weight variables depends on the value of `sample_design_stages`. Variables for stages beyond the number used in a project's survey design will not apply. For design-based analysis, use `wt_final` rather than the individual stage weights.
+
+**Geography (`admin_div*`):** Administrative divisions are harmonized to `admin_div1`&ndash;`admin_div3`. Companion `admin_div*_type` fields document the local label (province, county, region, district, etc.) because administrative levels differ across countries.
+
+**No pooled representativity:** Pooled descriptive statistics that ignore survey design are not nationally representative of any single country. Details of each study's sampling design are available in the interactive browser.
+
+**Per-study survey set-up:** The correct weighting and clustering specification for each study is listed in the EGRA/EGMA Project and Coverage Explorer. Do not apply one design to the entire pooled file.
+
+**Known gaps:** Some studies lack weights or complete design documentation; see the Release Notes for the current release for known gaps.
+
+## Study Design
+
+These concepts describe how a study was designed and fielded. Full project narratives and sampling descriptions, collection occasions and links to original files are in the interactive browser on the AFLEARN website.
+
+```{=html}
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Concept</th>
+    <th>Meaning</th>
+  </tr>
+  <tr>
+    <td><code>study_type</code></td>
+    <td>Classifies the unit tracking structure of the study. Cross-sectional (<code>cross_sectional</code>) = independent samples drawn at each round. School panel (<code>school_panel</code>) = the same schools tracked across rounds. Pupil panel (<code>pupil_panel</code>) = the same pupils tracked across rounds.</td>
+  </tr>
+  <tr>
+    <td><code>study_design</code></td>
+    <td>Describes the methodological design of the study. Pre&ndash;post (<code>pre_post</code>) = measures taken before and after an intervention without a control group. <code>quasi_experimental</code> = non-randomised comparison group. RCT = randomised controlled trial. Descriptive = no intervention, monitoring or baseline only. Unknown = design not ascertainable from available documentation.</td>
+  </tr>
+  <tr>
+    <td><code>round</code></td>
+    <td>An integer indicating the sequential data collection occasion within a given project (1, 2, 3, ...), assigned in chronological order.</td>
+  </tr>
+  <tr>
+    <td>Treatment indicator</td>
+    <td>Identifies whether a record belongs to a treatment or control group. Control = in control group. Treatment = in treatment group. Treatment2 = in 2nd treatment group. Treatment3 = in 3rd treatment group. Not applicable = study has no intervention.</td>
+  </tr>
+  <tr>
+    <td>Level of randomization</td>
+    <td>The unit at which treatment and control groups were randomly assigned in experimental studies. Used to determine the appropriate level at which to cluster standard errors in treatment effect estimation.</td>
+  </tr>
+</table>
+</div>
+```
+
+*Table 4: Study design variables in the dataset*

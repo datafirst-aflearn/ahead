@@ -1,0 +1,3 @@
+# Missing values and unresolved codes {#ch09-missing-values}
+
+Missing-value and non-response conventions for each variable are documented in the portal DDI codebook (value labels and frequencies).

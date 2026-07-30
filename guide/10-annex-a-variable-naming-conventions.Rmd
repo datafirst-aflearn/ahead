@@ -1,0 +1,222 @@
+# Annex A — Variable naming conventions {#ch10-annex-a-variable-naming-conventions}
+
+Harmonized names use snake_case. Every EGRA/EGMA subtask shares a subtask stem; individual fields add an item number or metric suffix.
+
+```{=html}
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Task</th>
+    <th>Core stem</th>
+  </tr>
+  <tr>
+    <td>Number identification</td>
+    <td><code>num_id</code></td>
+  </tr>
+  <tr>
+    <td>Number discrimination</td>
+    <td><code>quant_comp</code></td>
+  </tr>
+  <tr>
+    <td>Addition level I</td>
+    <td><code>addlvl1</code></td>
+  </tr>
+  <tr>
+    <td>Addition level II</td>
+    <td><code>addlvl2</code></td>
+  </tr>
+  <tr>
+    <td>Subtraction level I</td>
+    <td><code>sublvl1</code></td>
+  </tr>
+  <tr>
+    <td>Subtraction level II</td>
+    <td><code>sublvl2</code></td>
+  </tr>
+  <tr>
+    <td>Word problems</td>
+    <td><code>word_prob</code></td>
+  </tr>
+  <tr>
+    <td>Missing number</td>
+    <td><code>miss_num</code></td>
+  </tr>
+  <tr>
+    <td>Multiplication</td>
+    <td><code>mult</code></td>
+  </tr>
+  <tr>
+    <td>Fractions</td>
+    <td><code>frac</code></td>
+  </tr>
+  <tr>
+    <td>Shape identification</td>
+    <td><code>shape_id</code></td>
+  </tr>
+  <tr>
+    <td>Written exercise</td>
+    <td><code>we_add</code>, <code>we_sub</code>, <code>we_mult</code>, <code>we_div</code></td>
+  </tr>
+</table>
+</div>
+```
+
+*Table 12: Standard EGMA subtask prefixes*
+
+```{=html}
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Task</th>
+    <th>Core stem</th>
+    <th>Alternate prefixes in project data</th>
+  </tr>
+  <tr>
+    <td>Listening comprehension</td>
+    <td><code>list_comp</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Letter name knowledge</td>
+    <td><code>letter_name</code></td>
+    <td><code>letter</code></td>
+  </tr>
+  <tr>
+    <td>Letter sound knowledge</td>
+    <td><code>letter_sound</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Invented word reading</td>
+    <td><code>invent_word</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Familiar word reading</td>
+    <td><code>fam_word</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Oral reading fluency</td>
+    <td><code>oral_read</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Reading comprehension</td>
+    <td><code>read_comp</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Letter dictation</td>
+    <td><code>dict</code></td>
+    <td><code>dict_let</code>, <code>dict_letter</code>, <code>letter_dict</code></td>
+  </tr>
+  <tr>
+    <td>Word dictation</td>
+    <td><code>dict_word</code></td>
+    <td><code>word_dict</code></td>
+  </tr>
+  <tr>
+    <td>Sentence dictation</td>
+    <td><code>dict_sent</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Vocabulary</td>
+    <td><code>vocabA</code>, <code>vocabB</code>, <code>vocabC</code>, <code>vocab_word</code></td>
+    <td><code>vocab</code></td>
+  </tr>
+  <tr>
+    <td>Oral vocabulary</td>
+    <td><code>oral_vocab</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Maze / cloze</td>
+    <td><code>mazeA</code>, <code>mazeB</code></td>
+    <td><code>maze</code></td>
+  </tr>
+  <tr>
+    <td>Phonemic awareness &mdash; initial sound</td>
+    <td><code>pa_init_sound</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Phonemic awareness &mdash; different initial sound</td>
+    <td><code>pa_df_init_snd</code></td>
+    <td><code>pa_diff_init_sound</code></td>
+  </tr>
+  <tr>
+    <td>Phonemic awareness &mdash; different final sound</td>
+    <td><code>pa_df_fnl_snd</code></td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td>Phonemic awareness &mdash; segmentation</td>
+    <td><code>pa_num_sound</code></td>
+    <td><code>pa_phon_sound</code>, <code>pa_sounds_id</code></td>
+  </tr>
+  <tr>
+    <td>Syllable reading</td>
+    <td><code>syllable_sound</code></td>
+    <td><code>syll_sound</code></td>
+  </tr>
+  <tr>
+    <td>Silly sentence</td>
+    <td><code>silly_sentence</code></td>
+    <td>&mdash;</td>
+  </tr>
+</table>
+</div>
+```
+
+*Table 13: Standard EGRA subtask prefixes*
+
+```{=html}
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Pattern</th>
+    <th>Typical meaning</th>
+    <th>Harmonized treatment</th>
+  </tr>
+  <tr>
+    <td><code>l2_</code>, <code>mt</code>, <code>mt1</code>&ndash;<code>mt3</code></td>
+    <td>Second language / mother tongue</td>
+    <td>Separate <code>l2_*</code> stem</td>
+  </tr>
+  <tr>
+    <td><code>unt</code>, <code>k_unt</code></td>
+    <td>Untimed administration</td>
+    <td>Separate stem (e.g. <code>unt_oral_read</code>)</td>
+  </tr>
+  <tr>
+    <td><code>lb</code>, <code>ext_lb</code>, <code>ilb</code></td>
+    <td>Look-back comprehension</td>
+    <td>Separate stem or <code>read_compB</code> variant</td>
+  </tr>
+  <tr>
+    <td>B, A on stem</td>
+    <td>Alternate passage or section</td>
+    <td>Separate stem (<code>oral_readB</code>, <code>vocabB</code>)</td>
+  </tr>
+  <tr>
+    <td><code>eq</code>, <code>k_eq</code>, <code>r_eq</code></td>
+    <td>Baseline-adjusted equivalent score</td>
+    <td>Excluded</td>
+  </tr>
+  <tr>
+    <td><code>i</code>, <code>i1</code>&ndash;<code>i3</code></td>
+    <td>Imputed values</td>
+    <td>Excluded</td>
+  </tr>
+  <tr>
+    <td><code>t</code>, <code>ht</code>, <code>sso</code></td>
+    <td>Teacher / head teacher / staff</td>
+    <td>Excluded (non-pupil)</td>
+  </tr>
+</table>
+</div>
+```
+
+*Table 14: Common project-specific prefix patterns*

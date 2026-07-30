@@ -1,0 +1,32 @@
+# Guiding Principles {#ch03-guiding-principles}
+
+The harmonization is guided by a set of principles that underpin the design and ongoing development of the pooled database. These principles define the intended characteristics of the harmonized dataset and guide future releases. These guidelines are aligned with the goals of the harmonization.
+
+```{=html}
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Principle</th>
+    <th>Meaning for users</th>
+  </tr>
+  <tr>
+    <td>Scalability</td>
+    <td>The harmonized database structure is designed to support the addition of variables (horizontal expansion) and new surveys (vertical expansion) in future releases.</td>
+  </tr>
+  <tr>
+    <td>Transparency</td>
+    <td>Harmonization decisions, variable mappings, and metadata are fully documented to ensure that users can understand how project variables have been transformed and interpreted. Harmonization decisions and metadata are documented through the portal DDI codebook and this guide.</td>
+  </tr>
+  <tr>
+    <td>Traceability</td>
+    <td>Every harmonized variable can be traced back to its original project dataset and supporting documentation. Each project links back to original microdata and documentation on DataLumos via the Project-Level Descriptions on the AFLEARN website.</td>
+  </tr>
+  <tr>
+    <td>Analytic flexibility</td>
+    <td>The harmonized dataset is designed to support a wide range of analytical applications, including cross-sectional pooling where variables align, within-project round comparisons, and school-panel analysis where programmes resurvey the same schools.</td>
+  </tr>
+</table>
+</div>
+```
+
+*Table 1: African EGRA/EGMA data harmonization principles*

@@ -1,0 +1,85 @@
+# Identifiers {#ch08-identifiers}
+
+The harmonized dataset preserves the original individual study identifiers while also providing harmonized identifiers and project metadata to support data management, reproducibility, and traceability.
+
+The pooled dataset includes the following identifiers and metadata:
+
+```{=html}
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>File</th>
+    <th>Identifiers and metadata</th>
+  </tr>
+  <tr>
+    <td>Main pooled data file</td>
+    <td><code>country</code>, <code>year</code>, original <code>school_id</code>, original <code>student_id</code>, <code>harm_student_id</code>, <code>country_iso</code>, <code>project_code</code>, <code>study_type</code>, <code>study_design</code>, <code>round</code>, <code>school_code</code> (harmonized school id), <code>pupil_code</code></td>
+  </tr>
+</table>
+</div>
+```
+
+*Table 9: Identifiers in the pooled dataset*
+
+The interactive browser provides more context on the project related variables.
+
+## Original identifiers (school_id, student_id)
+
+`school_id` and `student_id` are retained in string format. See [Demographics and pupil context — Important considerations](05-context-demographics-survey-study-design.html) for identifier scope and linkage limitations.
+
+Although some projects followed the same schools over multiple rounds, `school_id` and `student_id` alone do not constitute pupil-level longitudinal identifiers. Whether longitudinal linkage at the pupil level is available depends on the release; consult the Release Notes for the current release for details.
+
+Use the interactive browser to trace back to the original DataLumos files and their codebooks.
+
+## Harmonized student ID (harm_student_id)
+
+The pooled dataset includes harmonized identifiers to facilitate data management within the pooled database. The variable `harm_student_id` provides a unique, fixed-width identifier for each pupil record. It encodes the project structure, the round of data collection, school, and pupil codes, creating a stable key for uniquely identifying records within the harmonized dataset.
+
+The structure of `harm_student_id` is described in the table below:
+
+```{=html}
+<div class="ahead-table-wrap">
+<table class="ahead-data-table">
+  <tr>
+    <th>Position</th>
+    <th>Component</th>
+    <th>Width</th>
+    <th>Meaning</th>
+  </tr>
+  <tr>
+    <td>1&ndash;2</td>
+    <td><code>country_iso</code></td>
+    <td>2</td>
+    <td>ISO-3166 alpha-2 (e.g. KE, RW)</td>
+  </tr>
+  <tr>
+    <td>3&ndash;5</td>
+    <td><code>project_code</code></td>
+    <td>3</td>
+    <td>Zero-padded project code within country</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td><code>round</code></td>
+    <td>1</td>
+    <td>Collection round within project (1&ndash;9)</td>
+  </tr>
+  <tr>
+    <td>7&ndash;9</td>
+    <td><code>school_code</code></td>
+    <td>3</td>
+    <td>Harmonized school rank within country+project+round</td>
+  </tr>
+  <tr>
+    <td>10&ndash;12</td>
+    <td><code>pupil_code</code></td>
+    <td>3</td>
+    <td>Harmonized pupil rank within school</td>
+  </tr>
+</table>
+</div>
+```
+
+*Table 10: Harmonized identifier components*
+
+**Assignment logic (interpretive):** `school_code` and `pupil_code` are derived from original `school_id` and `student_id` where present; missing pupil IDs receive sequential placeholders within the school. Codes are assigned within each `country_iso` + `project_code` + `round` combination — the same original school in two rounds receives a different `harm_student_id` because the round digit changes. By construction, `harm_student_id` is unique within each `country_iso` + `project_code` + `round`.

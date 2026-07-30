@@ -1,0 +1,21 @@
+# Multiple instances of the same subtask {#ch07-multiple-instances-same-subtask}
+
+EGRA assessments sometimes administer the same subtask more than once, for example, in multiple languages, in timed and untimed formats, or using alternative reading passages.
+
+**Subtask administered in multiple languages**
+
+Where the same subtask is administered in multiple languages, a prefix of `l2` is added to indicate the second language of assessment. This second language of assessment is then specified in the `lang2_assessment` variable.
+
+**Different versions of subtask within the same language**
+
+Where a subtask is administered more than once in the same language (e.g. two different reading passages), the letter B (or C, D etc.) is added to the end of the subtask stem. For example, `oral_readB_score` indicates the number of correct words on the second reading passage.
+
+**Subtask variants**
+
+In cases where a standard subtask is administered in a substantively different way, a new subtask stem is created. For example, untimed oral reading is indicated by the `unt_oral_read` stem.
+
+## Important considerations
+
+**Availability:** Not every subtask was administered in every project, and item counts differ. Use the interactive browser and DDI codebook to confirm coverage for your project of interest before pooling.
+
+**Wide versus long data:** The harmonized dataset is distributed in wide format, with each harmonized variable represented by its own column. This structure supports straightforward pooling across projects. Analysts wishing to compare multiple versions of the same assessment (for example, first- and second-language oral reading tasks) may reshape the data into long format where appropriate for their analysis.

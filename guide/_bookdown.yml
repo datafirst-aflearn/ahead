@@ -1,0 +1,18 @@
+book_filename: "ahead-user-guide"
+output_dir: "../docs/guide"
+delete_merged_file: true
+knit_root_dir: "."
+language:
+  ui:
+    chapter_name: " "
+rmd_files:
+  - index.Rmd
+  - 02-objectives-of-harmonization.Rmd
+  - 03-guiding-principles.Rmd
+  - 04-prioritization-criteria.Rmd
+  - 05-context-demographics-survey-study-design.Rmd
+  - 06-egra-egma-subtask-variables.Rmd
+  - 07-multiple-instances-same-subtask.Rmd
+  - 08-identifiers.Rmd
+  - 09-missing-values.Rmd
+  - 10-annex-a-variable-naming-conventions.Rmd

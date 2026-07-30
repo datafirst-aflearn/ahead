@@ -1,0 +1,11 @@
+bookdown::gitbook:
+  css: style.css
+  includes:
+    before_body: home-link.html
+  config:
+    toc:
+      before: |
+        <li class="toc-logo"><a href="../index.html"><img src="files/aflearn-logo.png" alt="AFLEARN"></a></li>
+        <li class="home-link"><a href="index.html"><i class="fa fa-home"></i> Guide home</a></li>
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>

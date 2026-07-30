@@ -22,21 +22,21 @@ button.af-study-tab {
 }
 body {
   font-size: 16px;
-  background: #FFFFFF;
+  background: #EEF3F7;
   color: #1F2937;
   margin: 0; padding: 0;
 }
 .af-logobar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.85rem 2rem; background: #080056;
+  padding: 0.85rem 2rem; background: #0D0D52;
 }
 .af-logo-aflearn,
 .af-logo-datafirst {
   height: 96px; width: auto; max-width: 320px; object-fit: contain; display: block;
 }
 .af-study-hero {
-  background: #100A78; color: #fff; padding: 1.75rem 2rem 1.5rem;
-  border-bottom: 3px solid #080056;
+  background: #0D0D52; color: #fff; padding: 1.75rem 2rem 1.5rem;
+  border-bottom: 3px solid #0A0A42;
 }
 .af-study-hero h1 {
   margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 800; line-height: 1.25;
@@ -44,7 +44,7 @@ body {
 .af-back-link {
   color: #CBD5E1; text-decoration: none; font-size: 0.9rem; font-weight: 600;
 }
-.af-back-link:hover { color: #C8892A; }
+.af-back-link:hover { color: #0049FF; }
 .af-study-layout {
   display: grid; grid-template-columns: minmax(0, 1fr) 280px;
   gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 1.75rem 2rem 2.5rem;
@@ -59,19 +59,19 @@ body {
   font-family: var(--af-font); font-size: 1.05rem; font-weight: 800;
   color: #0F1F38; cursor: pointer; transition: color 0.15s, border-color 0.15s;
 }
-.af-study-tab:hover { color: #C8892A; }
-.af-study-tab.active { color: #C8892A; border-bottom-color: #C8892A; }
+.af-study-tab:hover { color: #0049FF; }
+.af-study-tab.active { color: #0049FF; border-bottom-color: #0049FF; }
 .af-study-panel { display: none; }
 .af-study-panel.active { display: block; }
 .af-study-panel p {
   font-size: 1rem; line-height: 1.7; color: #374151; margin: 0 0 1rem;
 }
 .af-section-title {
-  font-size: 1.15rem; font-weight: 800; color: #06003E; margin: 1.5rem 0 0.75rem;
+  font-size: 1.15rem; font-weight: 800; color: #1F2937; margin: 1.5rem 0 0.75rem;
 }
 .af-section-title:first-child { margin-top: 0; }
 .af-meta-card {
-  background: #F8FAFC; border: 1px solid #E5E7EB; border-radius: 8px;
+  background: #EEF3F7; border: 1px solid #E5E7EB; border-radius: 8px;
   padding: 1.1rem 1.15rem;
 }
 .af-meta-row {
@@ -80,21 +80,29 @@ body {
 }
 .af-meta-row:last-child { border-bottom: none; }
 .af-meta-label { color: #64748B; font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.06em; }
-.af-meta-value { color: #06003E; font-weight: 700; text-align: right; }
-.af-subtask-list { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.5rem; }
-.af-subtask-item {
-  border: 1px solid #E5E7EB; border-radius: 8px; background: #FFFFFF;
+.af-meta-value { color: #1F2937; font-weight: 700; text-align: right; }
+.af-subtask-table-wrap {
+  margin-top: 0.5rem; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;
+  background: #FFFFFF;
 }
-.af-subtask-item summary {
-  cursor: pointer; padding: 0.9rem 1rem; font-weight: 800; color: #06003E;
-  list-style: none; display: flex; justify-content: space-between; align-items: center;
+.af-subtask-table {
+  width: 100%; border-collapse: collapse; font-size: 0.95rem;
 }
-.af-subtask-item summary::-webkit-details-marker { display: none; }
-.af-subtask-item summary::after { content: '+'; color: #06003E; font-size: 1.2rem; font-weight: 700; }
-.af-subtask-item[open] summary::after { content: '×'; }
-.af-subtask-item summary:hover { color: #C8892A; }
-.af-subtask-body {
-  padding: 0 1rem 1rem; font-size: 0.95rem; line-height: 1.65; color: #374151;
+.af-subtask-table th {
+  text-align: left; padding: 0.7rem 1rem; background: #EEF3F7;
+  color: #64748B; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  border-bottom: 1px solid #E5E7EB;
+}
+.af-subtask-table td {
+  padding: 0.7rem 1rem; border-bottom: 1px solid #E5E7EB; color: #1F2937;
+  vertical-align: top;
+}
+.af-subtask-table tr:last-child td { border-bottom: none; }
+.af-subtask-table .af-subtask-name { font-weight: 700; }
+.af-subtask-table .af-subtask-prefix {
+  font-family: ui-monospace, monospace; font-weight: 600; color: #0D0D52;
+  white-space: nowrap;
 }
 .af-svyset {
   font-family: ui-monospace, monospace; font-size: 12px; color: #0F1F38;
@@ -105,7 +113,7 @@ body {
 
 .af-footer {
   padding: 0.9rem 2rem 1.5rem; font-size: 0.82rem; color: #9CA3AF;
-  border-top: 1px solid #E5E7EB; background: #FFFFFF;
+  border-top: 1px solid #E5E7EB; background: #EEF3F7;
 }
 .af-link-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 0.75rem; }
 .af-link-pill {
@@ -120,7 +128,7 @@ body {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   min-width: 64px; padding: 0.55rem 0.7rem; border-radius: 8px; text-align: center;
 }
-.af-id-segment.known { background: #100A78; color: #fff; }
+.af-id-segment.known { background: #0D0D52; color: #fff; }
 .af-id-segment.unknown {
   background: #F8FAFC; color: #94A3B8; border: 1.5px dashed #CBD5E1;
 }
@@ -144,8 +152,8 @@ body {
   background: #F8FAFC; color: #64748B; font-weight: 700; font-size: 0.72rem;
   text-transform: uppercase; letter-spacing: 0.05em;
 }
-.af-crosswalk-var { font-family: ui-monospace, monospace; font-weight: 700; color: #06003E; }
-.af-crosswalk-arrow { text-align: center; color: #C8892A; font-weight: 700; }
+.af-crosswalk-var { font-family: ui-monospace, monospace; font-weight: 700; color: #1F2937; }
+.af-crosswalk-arrow { text-align: center; color: #0049FF; font-weight: 700; }
 .af-code-tabs { display: flex; gap: 0.5rem; margin: 0.5rem 0 0; }
 .af-code-tab {
   background: #F8FAFC; border: 1px solid #E5E7EB; border-bottom: none;
@@ -204,109 +212,86 @@ body {
         <div id="panel-about" class="af-study-panel active">
           <p>The Literacy Achievement and Retention Activity (LARA) was a six-year (2015–2021) USAID-funded programme implemented by RTI International in partnership with the Ugandan Ministry of Education and Sports (MoES) to improve early grade reading and learner retention in Ugandan primary schools. The programme strengthened the delivery of early grade reading instruction in local languages and English while promoting learner retention through interventions to reduce school-related gender-based violence (SRGBV). The independent Performance and Impact Evaluation (P&amp;IE), conducted by NORC at the University of Chicago using a mixed-methods randomized controlled trial design, assessed the impact of these interventions on reading outcomes, attendance, retention, and school climate.</p>
           <h2 class="af-section-title">Assessment Subtasks</h2>
-          <p style="color:#64748B; font-size:0.95rem; margin-bottom:1rem;">The subtasks included in this assessment survey are described below.</p>
-          <div class="af-subtask-list">
-            <details class="af-subtask-item">
-              <summary>Letter sound identification</summary>
-              <div class="af-subtask-body">
-                <p>Learners identify letters by corresponding sound within 60 seconds (LSCPM). Discontinued if no letters in the first line are correct.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Non-word reading</summary>
-              <div class="af-subtask-body">
-                <p>Learners read aloud pseudowords within 60 seconds (CWPM). Discontinued if none of the first five words are correct.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Oral reading fluency</summary>
-              <div class="af-subtask-body">
-                <p>Learners read a grade-appropriate passage within 60 seconds (CWPM). Discontinued if none of the first ~10 words are correct.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Reading comprehension</summary>
-              <div class="af-subtask-body">
-                <p>Learners answer questions on a passage; may allow look-backs. Untimed.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Vocabulary (pointing) (second language)</summary>
-              <div class="af-subtask-body">
-                <p>Learners point to body parts named orally. Untimed.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Vocabulary (naming) (second language)</summary>
-              <div class="af-subtask-body">
-                <p>Learners name pictured objects. Untimed.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Vocabulary  (second language, version B)</summary>
-              <div class="af-subtask-body">
-                <p style="color:#94A3B8; font-style:italic;">Description coming soon.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Phoneme segmentation</summary>
-              <div class="af-subtask-body">
-                <p>Learners break words into individual sounds or syllables. Untimed; discontinued if no points in first five items.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Letter sound identification (second language)</summary>
-              <div class="af-subtask-body">
-                <p>Learners identify letters by corresponding sound within 60 seconds (LSCPM). Discontinued if no letters in the first line are correct.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Non-word reading (second language)</summary>
-              <div class="af-subtask-body">
-                <p>Learners read aloud pseudowords within 60 seconds (CWPM). Discontinued if none of the first five words are correct.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Oral reading fluency (second language)</summary>
-              <div class="af-subtask-body">
-                <p>Learners read a grade-appropriate passage within 60 seconds (CWPM). Discontinued if none of the first ~10 words are correct.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Reading comprehension (second language)</summary>
-              <div class="af-subtask-body">
-                <p>Learners answer questions on a passage; may allow look-backs. Untimed.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Listening comprehension (second language)</summary>
-              <div class="af-subtask-body">
-                <p>Learners listen to a passage and answer comprehension questions. Untimed; no discontinuation rule.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Weadd</summary>
-              <div class="af-subtask-body">
-                <p style="color:#94A3B8; font-style:italic;">Description coming soon.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Reading comprehension (second language, version B)</summary>
-              <div class="af-subtask-body">
-                <p>Learners answer questions on a passage; may allow look-backs. Untimed.</p>
-              </div>
-            </details>
-            <details class="af-subtask-item">
-              <summary>Oral reading fluency (second language, version B)</summary>
-              <div class="af-subtask-body">
-                <p>Learners read a grade-appropriate passage within 60 seconds (CWPM). Discontinued if none of the first ~10 words are correct.</p>
-              </div>
-            </details>
+          <div class="af-subtask-table-wrap">
+            <table class="af-subtask-table">
+              <thead>
+                <tr>
+                  <th>Sub-task</th>
+                  <th>Prefix</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="af-subtask-name">Letter sound identification</td>
+                  <td class="af-subtask-prefix">letter_sound</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Non-word reading</td>
+                  <td class="af-subtask-prefix">invent_word</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Oral reading fluency</td>
+                  <td class="af-subtask-prefix">oral_read</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Reading comprehension</td>
+                  <td class="af-subtask-prefix">read_comp</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Vocabulary (pointing) (second language)</td>
+                  <td class="af-subtask-prefix">l2vocaba</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Vocabulary (naming) (second language)</td>
+                  <td class="af-subtask-prefix">l2vocabc</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Vocabulary  (second language, version B)</td>
+                  <td class="af-subtask-prefix">l2vocabb</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Phoneme segmentation</td>
+                  <td class="af-subtask-prefix">pa_num_sound</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Letter sound identification (second language)</td>
+                  <td class="af-subtask-prefix">l2lettersound</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Non-word reading (second language)</td>
+                  <td class="af-subtask-prefix">l2inventword</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Oral reading fluency (second language)</td>
+                  <td class="af-subtask-prefix">l2oralread</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Reading comprehension (second language)</td>
+                  <td class="af-subtask-prefix">l2readcomp</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Listening comprehension (second language)</td>
+                  <td class="af-subtask-prefix">l2listcomp</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Written addition</td>
+                  <td class="af-subtask-prefix">we_add</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Reading comprehension (second language, version B)</td>
+                  <td class="af-subtask-prefix">l2readcompb</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Oral reading fluency (second language, version B)</td>
+                  <td class="af-subtask-prefix">l2oralreadb</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <div id="panel-sampling" class="af-study-panel">
           <h2 class="af-section-title">Sampling Description</h2>
-          <p style="font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;">The Literacy Achievement and Retention Activity (LARA) impact evaluation employed a multi-stage cluster sampling design within a cluster-randomized controlled trial and was designed to estimate programme impacts rather than produce nationally representative estimates. The sampling frame comprised Cluster 2 (C2) schools in the Luganda and Runyankore/Rukiga language regions of Uganda. In the first stage, Coordinating Centre Tutor (CCT) clusters were randomly assigned to one of three study arms: early grade reading (EGR) intervention only, combined EGR and school-related gender-based violence (SRGBV) intervention, or a control group. In the second stage, schools were randomly selected within sampled CCT clusters and the same schools were revisited at baseline (2017) and midline (2019), forming a longitudinal school panel. In the third stage, pupils were randomly selected for assessment within sampled schools at each survey round. The evaluation excluded the Runyoro/Rutooro language region because the available sample was insufficient for rigorous impact analysis. Consequently, survey estimates are representative of eligible Cluster 2 schools in the Luganda and Runyankore/Rukiga programme areas and should not be interpreted as nationally representative of Uganda.</p>
+          <p style="font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;">The Literacy Achievement and Retention Activity (LARA) impact evaluation employed a multi-stage cluster sampling design within a cluster-randomized controlled trial and was designed to estimate programme impacts rather than produce nationally representative estimates. The sampling frame comprised Cluster 2 (C2) schools in the Luganda and Runyankore/Rukiga language regions of Uganda. In the first stage, Coordinating Centre Tutor (CCT) clusters were randomly assigned to one of three study arms: early grade reading (EGR) intervention only, combined EGR and school-related gender-based violence (SRGBV) intervention, or a control group. In the second stage, schools were randomly selected within sampled CCT clusters and the same schools were revisited at baseline (2017) and midline (2019), forming a longitudinal school panel. In the third stage, pupils were randomly selected for assessment within sampled schools at each survey round. The evaluation excluded the Runyoro/Rutooro language region because the available sample was insufficient for rigorous impact analysis. Consequently, survey estimates are representative of eligible Cluster 2 schools in the Luganda and Runyankore/Rukiga programme areas and should not be interpreted as nationally representative of Uganda. The harmonised pool contains 9796  pupil records.</p>
           <h2 class="af-section-title">Survey design (svyset)</h2>
           <pre class="af-svyset">No weights in dataset</pre>
           <h2 class="af-section-title">Data files</h2>
@@ -453,7 +438,7 @@ linked &lt;- study_round |&gt;
           </div>
           <div class="af-meta-row">
             <span class="af-meta-label">Grade(s)</span>
-            <span class="af-meta-value">1, 3</span>
+            <span class="af-meta-value">3, 4</span>
           </div>
           <div class="af-meta-row">
             <span class="af-meta-label">Language</span>

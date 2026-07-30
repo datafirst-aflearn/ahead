@@ -1,0 +1,11 @@
+# Prioritization Criteria for Inclusion {#ch04-prioritization-criteria}
+
+Project datasets are prioritised according to their potential analytical value, comparability with existing data, and contribution to the long-term objectives of the harmonization programme.
+
+When expanding the harmonized pool, projects may be prioritised by:
+
+- Recency of data collection
+- National representativeness
+- Availability of longitudinal follow-up at the child level
+- Extended assessment formats (e.g. three-minute oral reading fluency instead of the standard one-minute task)
+- Inclusion of EGMA modules alongside EGRA
