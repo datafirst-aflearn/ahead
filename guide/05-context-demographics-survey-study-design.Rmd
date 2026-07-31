@@ -75,11 +75,11 @@ The harmonized dataset contains demographic and pupil context variables describi
 
 **Grade:** Although grade values have been harmonized to a common set of labels, the distribution of grades varies across projects or individual studies. Users should make comparisons with reference to each project's stated target population and design. Note that the same grade label does not imply equivalent curricula or learning expectations across countries.
 
-**Age:** Age is retained as a continuous variable wherever possible. Missing or non-response values follow the harmonized missing-value conventions described in [Missing values and unresolved codes](09-missing-values.html).
+**Age:** Age is retained as a continuous variable wherever possible. Missing or non-response values follow the harmonized missing-value conventions described in the [metadata record](https://www.datafirst.uct.ac.za/dataportal/index.php/catalog/1198/data-dictionary).
 
 **Location:** Urban/rural coding is harmonized where collected. However, not all projects distinguish location.
 
-**Identifiers:** The harmonized variables `school_id` and `student_id` are copied directly from the original datasets and are meaningful only within their individual studies. They should not be used to link observations across studies or survey rounds. The pooled dataset includes the harmonized identifier `harm_student_id`, described in [Identifiers](08-identifiers.html).
+**Identifiers:** The harmonized variables `school_id` and `student_id` are copied directly from the original datasets and are meaningful only within their individual studies. They should not be used to link observations across studies or survey rounds. The pooled dataset includes the harmonized identifier `harm_student_id`, described in [Identifiers](docs/guide/08-identifiers.html).
 
 ## Survey design, weights, and geography
 

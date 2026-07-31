@@ -25,7 +25,7 @@ The interactive browser provides more context on the project related variables.
 
 ## Original identifiers (school_id, student_id)
 
-`school_id` and `student_id` are retained in string format. See [Demographics and pupil context — Important considerations](05-context-demographics-survey-study-design.html) for identifier scope and linkage limitations.
+`school_id` and `student_id` are retained in string format. See [Demographics and pupil context](docs/guide/05-context-demographics-survey-study-design.html) for identifier scope and linkage limitations.
 
 Although some projects followed the same schools over multiple rounds, `school_id` and `student_id` alone do not constitute pupil-level longitudinal identifiers. Whether longitudinal linkage at the pupil level is available depends on the release; consult the Release Notes for the current release for details.
 

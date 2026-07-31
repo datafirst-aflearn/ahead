@@ -10,10 +10,13 @@
   <link rel="icon" type="image/png" href="../../favicon.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Telex&amp;family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&amp;display=swap" rel="stylesheet"/>
   
 <style>
-:root { --af-font: 'Source Sans 3', sans-serif; }
+:root {
+  --af-font: 'Telex', sans-serif;
+  --af-font-display: 'Ubuntu', sans-serif;
+}
 *, *::before, *::after { box-sizing: border-box; }
 html, body,
 input, button, select, textarea,
@@ -39,7 +42,7 @@ body {
   border-bottom: 3px solid #0A0A42;
 }
 .af-study-hero h1 {
-  margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 800; line-height: 1.25;
+  margin: 0 0 0.5rem; font-family: var(--af-font-display); font-size: 1.75rem; font-weight: 700; line-height: 1.25;
 }
 .af-back-link {
   color: #CBD5E1; text-decoration: none; font-size: 0.9rem; font-weight: 600;
@@ -67,7 +70,7 @@ body {
   font-size: 1rem; line-height: 1.7; color: #374151; margin: 0 0 1rem;
 }
 .af-section-title {
-  font-size: 1.15rem; font-weight: 800; color: #1F2937; margin: 1.5rem 0 0.75rem;
+  font-family: var(--af-font-display); font-size: 1.15rem; font-weight: 700; color: #1F2937; margin: 1.5rem 0 0.75rem;
 }
 .af-section-title:first-child { margin-top: 0; }
 .af-meta-card {
@@ -238,7 +241,7 @@ body {
                   <td class="af-subtask-prefix">sublvl2</td>
                 </tr>
                 <tr>
-                  <td class="af-subtask-name">Non-word reading</td>
+                  <td class="af-subtask-name">Invented word reading</td>
                   <td class="af-subtask-prefix">invent_word</td>
                 </tr>
                 <tr>

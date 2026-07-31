@@ -31,6 +31,20 @@ message("Rendering AHEAD User Guide to ../docs/guide/ ...")
 bookdown::render_book("index.Rmd", quiet = FALSE)
 
 guide_dir <- normalizePath(file.path(root, "..", "docs", "guide"), winslash = "/", mustWork = FALSE)
+
+# Ensure guide assets (logos, PDFs, etc.) are published alongside the HTML.
+files_src <- file.path(root, "files")
+files_dst <- file.path(guide_dir, "files")
+if (dir.exists(files_src) && dir.exists(guide_dir)) {
+  dir.create(files_dst, recursive = TRUE, showWarnings = FALSE)
+  file.copy(
+    list.files(files_src, full.names = TRUE),
+    files_dst,
+    overwrite = TRUE,
+    recursive = TRUE
+  )
+}
+
 nojekyll <- file.path(guide_dir, ".nojekyll")
 if (dir.exists(guide_dir) && !file.exists(nojekyll)) {
   writeLines("", nojekyll)

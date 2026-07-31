@@ -1,26 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Source+Sans+3:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Telex&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
 /* AFLEARN / AHEAD brand palette
-   Off-white #EEF3F7 (60%) base, Navy #0D0D52 (30%) chrome, Blue #0049FF (10%) accent */
+   Off-white #EEF3F7 (60%) base, Navy #0D0D52 (30%) chrome, Blue #0049FF (10%) accent
+   Fonts match the PASEC / AMPL analysis guides: Telex (body), Ubuntu (headings) */
 
-body, p, li, td, th {
-  font-family: 'Source Sans 3', sans-serif;
-}
-
-.title, h1, h2, h3, h4, h5, h6 {
-  font-family: 'Inter', sans-serif;
-  color: #0D0D52;
+p, div, body, li, td, th {
+  font-family: 'Telex', sans-serif;
 }
 
 .title {
-  font-weight: 900;
+  font-family: 'Ubuntu', serif;
+  font-weight: 700;
+  color: #0D0D52;
 }
 
 .subtitle {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Ubuntu', serif;
   color: #0D0D52;
-  font-weight: 600;
+  font-weight: 400;
   font-style: normal !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Ubuntu', sans-serif;
+  color: #0D0D52;
+  font-weight: 700;
+}
+
+.summary {
+  font-family: 'Ubuntu', sans-serif;
 }
 
 /* Sidebar / TOC */

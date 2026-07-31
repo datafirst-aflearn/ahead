@@ -449,20 +449,9 @@ resolve_subtask_meta <- function(prefix, desc_lookup) {
     base <- sub("^we_", "", base)
     suffix_note <- c(suffix_note, "written exercise")
   }
-  if (grepl("B$", base) && !grepl("B$", normalize_task_key(base))) {
-    # already handled below via trailing B on original
-  }
-  if (grepl("B$", base)) {
-    base_try <- sub("B$", "", base)
-    base_key <- normalize_task_key(base_try)
-    base_hit <- desc_lookup[desc_lookup$task_id == base_key, , drop = FALSE]
-    if (nrow(base_hit)) {
-      base <- base_try
-      suffix_note <- c(suffix_note, "version B")
-    }
-  }
 
-  # also try without trailing B after stripping modifiers
+  # Prefer an exact match on the stripped prefix (e.g. vocabB = Vocabulary (spatial))
+  # before treating a trailing B as a version marker.
   base_key <- normalize_task_key(base)
   base_hit <- desc_lookup[desc_lookup$task_id == base_key, , drop = FALSE]
   if (!nrow(base_hit) && grepl("B$", base)) {
@@ -961,9 +950,9 @@ egra_subtask_copy <- function() {
       )
     ),
     invent_word = list(
-      title = "Nonwords",
+      title = "Invented word reading",
       body = paste(
-        "The nonword subtask tests students' skill in using letter-sound connections to",
+        "The invented word reading subtask tests students' skill in using letter-sound connections to",
         "figure out (\"decode\") words. While many students learn to memorize a broad range",
         "of \"sight\" words, they need skills to decode less-familiar words.",
         "In this subtask, students were given a list of made-up words that do not exist",
@@ -1083,7 +1072,7 @@ egra_subtask_copy <- function() {
       )
     ),
     pa_df_init_snd = list(
-      title = "Different Initial Sound",
+      title = "Phonemic awareness \u2013 different initial sound discrimination",
       body = paste(
         "This subtask measures whether a student can identify words that begin with a",
         "different sound from a reference word.",
@@ -1226,7 +1215,10 @@ sort_masters <- function(masters) {
 study_detail_styles <- function() {
   HTML("
 <style>
-:root { --af-font: 'Source Sans 3', sans-serif; }
+:root {
+  --af-font: 'Telex', sans-serif;
+  --af-font-display: 'Ubuntu', sans-serif;
+}
 *, *::before, *::after { box-sizing: border-box; }
 html, body,
 input, button, select, textarea,
@@ -1252,7 +1244,7 @@ body {
   border-bottom: 3px solid #0A0A42;
 }
 .af-study-hero h1 {
-  margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 800; line-height: 1.25;
+  margin: 0 0 0.5rem; font-family: var(--af-font-display); font-size: 1.75rem; font-weight: 700; line-height: 1.25;
 }
 .af-back-link {
   color: #CBD5E1; text-decoration: none; font-size: 0.9rem; font-weight: 600;
@@ -1280,7 +1272,7 @@ body {
   font-size: 1rem; line-height: 1.7; color: #374151; margin: 0 0 1rem;
 }
 .af-section-title {
-  font-size: 1.15rem; font-weight: 800; color: #1F2937; margin: 1.5rem 0 0.75rem;
+  font-family: var(--af-font-display); font-size: 1.15rem; font-weight: 700; color: #1F2937; margin: 1.5rem 0 0.75rem;
 }
 .af-section-title:first-child { margin-top: 0; }
 .af-meta-card {
@@ -1408,8 +1400,8 @@ landing_styles <- function() {
   HTML("
 <style>
 :root {
-  --af-font: 'Source Sans 3', sans-serif;
-  --af-font-display: 'Inter', sans-serif;
+  --af-font: 'Telex', sans-serif;
+  --af-font-display: 'Ubuntu', sans-serif;
 }
 *, *::before, *::after { box-sizing: border-box; }
 html, body { font-family: var(--af-font); }
@@ -1442,11 +1434,11 @@ body {
 }
 .af-landing-heading { flex: 1 1 480px; min-width: 0; }
 .af-landing-title {
-  margin: 0; font-family: var(--af-font-display); font-size: 3rem; font-weight: 900; color: #0D0D52;
+  margin: 0; font-family: var(--af-font-display); font-size: 3rem; font-weight: 700; color: #0D0D52;
   letter-spacing: 0.01em; line-height: 1.05;
 }
 .af-landing-subtitle {
-  margin: 0.5rem 0 0; font-family: var(--af-font-display); font-size: 1.3rem; font-weight: 700;
+  margin: 0.5rem 0 0; font-family: var(--af-font-display); font-size: 1.3rem; font-weight: 500;
   color: #0D0D52; line-height: 1.35;
 }
 .af-landing-description {
@@ -1495,7 +1487,7 @@ body {
 .af-card-icon-secondary { color: #FFAD44; }
 .af-card-icon-tertiary { color: #0DD8F9; }
 .af-card-title {
-  margin: 0; font-family: var(--af-font-display); font-size: 1.3rem; font-weight: 800; color: #0D0D52;
+  margin: 0; font-family: var(--af-font-display); font-size: 1.3rem; font-weight: 700; color: #0D0D52;
 }
 .af-card-chip {
   display: inline-flex; align-self: flex-start;
@@ -1732,7 +1724,7 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
       tags$link(rel = "preconnect", href = "https://fonts.googleapis.com"),
       tags$link(rel = "preconnect", href = "https://fonts.gstatic.com", crossorigin = NA),
       tags$link(
-        href = "https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap",
+        href = "https://fonts.googleapis.com/css2?family=Telex&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap",
         rel = "stylesheet"
       ),
       study_detail_styles()
@@ -1945,7 +1937,7 @@ write_landing_page <- function(outfile,
       tags$link(rel = "preconnect", href = "https://fonts.googleapis.com"),
       tags$link(rel = "preconnect", href = "https://fonts.gstatic.com", crossorigin = NA),
       tags$link(
-        href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap",
+        href = "https://fonts.googleapis.com/css2?family=Telex&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap",
         rel = "stylesheet"
       ),
       landing_styles()
@@ -1993,7 +1985,7 @@ write_landing_page <- function(outfile,
           tags$span(class = "af-card-chip", "Catalogue"),
           tags$p(
             class = "af-card-details",
-            glue("Browse {n_surveys} assessment surveys across {n_countries} countries. Filter by year, grade, language, sub-task, and study type.")
+            "Browse assessment surveys. Filter by year, grade, language, sub-task, and study type."
           )
         ),
         tags$a(
@@ -2024,7 +2016,7 @@ write_landing_page <- function(outfile,
           tags$span(class = "af-card-chip", "Guide"),
           tags$p(
             class = "af-card-details",
-            "Learn how the AHEAD is structured"
+            "Access comprehensive guidance on using AHEAD"
           )
         ),
         tags$a(
