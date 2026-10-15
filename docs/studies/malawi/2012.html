@@ -245,7 +245,7 @@ body {
                   <td class="af-subtask-prefix">list_comp</td>
                 </tr>
                 <tr>
-                  <td class="af-subtask-name">Phoneme segmentation</td>
+                  <td class="af-subtask-name">Number of sounds</td>
                   <td class="af-subtask-prefix">pa_num_sound</td>
                 </tr>
                 <tr>
@@ -253,7 +253,7 @@ body {
                   <td class="af-subtask-prefix">letter_name</td>
                 </tr>
                 <tr>
-                  <td class="af-subtask-name">Syllable identification</td>
+                  <td class="af-subtask-name">Syllable segmentation</td>
                   <td class="af-subtask-prefix">syllable_sound</td>
                 </tr>
                 <tr>
@@ -266,7 +266,7 @@ body {
         </div>
         <div id="panel-sampling" class="af-study-panel">
           <h2 class="af-section-title">Sampling Description</h2>
-          <p style="font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;">The EGRA Plus evaluation employed a two-stage cluster sampling design within a cluster randomized controlled trial and was designed to estimate the impacts of the intervention rather than produce population-representative estimates. The sampling frame comprised nationally representative public and community primary schools in Liberia. In the first stage, 176 schools were selected and grouped into geographic clusters for treatment randomization, with clusters randomly assigned to one of three study arms: Full Treatment (59 schools), Light Treatment (60 schools), or Control (57 schools). The same schools were followed throughout the baseline (2008), midline (2009), and endline (2010) surveys, while a new sample of pupils was selected independently at each round. In the second stage, between 10 and 20 Grade 2 and Grade 3 pupils were selected per school using systematic random sampling from pupils present on the day of assessment, with the target of assessing at least 10 pupils from each grade where possible. The harmonized dataset contains 2,988 pupil records from the 2008 baseline, 2,882 from the 2009 midline, and 2,688 from the 2010 endline. No sampling weights are described in the evaluation documentation.</p>
+          <p style="font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;">The Malawi National EGRA surveys conducted under the Malawi Teacher Professional Development Support (MTPDS) programme employed two-stage stratified cluster sampling designs and were designed to produce nationally representative estimates of Chichewa reading skills among Standard 2 and Standard 4 learners at the beginning of the school year. Three independent cross-sectional samples were drawn from the Ministry of Education's Education Management Information System (EMIS) list of all schools. In 2010, schools were stratified by division and district and selected by systematic random sampling with probability proportional to enrolment, and approximately 10 boys and 10 girls were randomly selected per school; the harmonized dataset contains 2,460 pupil records from 99 schools. In 2011, the sample was enlarged to allow comparisons by grade, gender and division: 25 schools were selected by systematic random sampling in each of Malawi's six education divisions (150 schools), and 20 learners (10 per standard, balanced by gender) were randomly selected per school, giving 3,019 pupil records. In 2012, schools were drawn from the 2011 EMIS list, stratified by division and district in proportion to population, with a matching school of the opposite sex selected from the same district where a single-sex school was drawn; the harmonized dataset contains 5,240 pupil records from 202 schools. The separate MTPDS reading intervention study (Maziko a Kuwerenga), which compared intervention schools in Salima and Ntchisi with control schools in Dedza and Mwanza, used a different sample and is not included in the harmonized pool. Final weights (`wt_final`) should be used together with the survey design variables (`stage1`–`stage2`, `strata1`–`strata2`, `fpc1`–`fpc2`) to produce nationally representative estimates.</p>
           <h2 class="af-section-title">Survey design (svyset)</h2>
           <div>
             <div class="af-code-tabs">
@@ -473,7 +473,7 @@ linked &lt;- study_round |&gt;
       </aside>
     </div>
     <div class="af-footer">
-      <strong>AHEAD — African Harmonised Early-Grade Assessments Data</strong>
+      <strong>AHEAD — African Harmonised Early-Grade Assessment Data</strong>
        · DataFirst, University of Cape Town
     </div>
     <script>

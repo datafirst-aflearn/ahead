@@ -274,23 +274,23 @@ body {
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Letter sound identification (second language)</td>
-                  <td class="af-subtask-prefix">l2lettersound</td>
+                  <td class="af-subtask-prefix">l2_letter_sound</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Invented word reading (second language)</td>
-                  <td class="af-subtask-prefix">l2inventword</td>
+                  <td class="af-subtask-prefix">l2_invent_word</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Oral reading fluency (second language)</td>
-                  <td class="af-subtask-prefix">l2oralread</td>
+                  <td class="af-subtask-prefix">l2_oral_read</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Reading comprehension (second language)</td>
-                  <td class="af-subtask-prefix">l2readcomp</td>
+                  <td class="af-subtask-prefix">l2_read_comp</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Listening comprehension (second language)</td>
-                  <td class="af-subtask-prefix">l2listcomp</td>
+                  <td class="af-subtask-prefix">l2_list_comp</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Written addition</td>
@@ -301,12 +301,12 @@ body {
                   <td class="af-subtask-prefix">we_sub</td>
                 </tr>
                 <tr>
-                  <td class="af-subtask-name">Syllable identification</td>
+                  <td class="af-subtask-name">Syllable segmentation</td>
                   <td class="af-subtask-prefix">syllable_sound</td>
                 </tr>
                 <tr>
-                  <td class="af-subtask-name">Vocabulary  (second language)</td>
-                  <td class="af-subtask-prefix">l2vocabword</td>
+                  <td class="af-subtask-name">Vocabulary (second language – word)</td>
+                  <td class="af-subtask-prefix">l2_vocab_word</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Multiplication</td>
@@ -318,11 +318,11 @@ body {
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Initial sound identification (second language)</td>
-                  <td class="af-subtask-prefix">l2painitsound</td>
+                  <td class="af-subtask-prefix">l2_pa_init_sound</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Familiar word reading (second language)</td>
-                  <td class="af-subtask-prefix">l2famword</td>
+                  <td class="af-subtask-prefix">l2_fam_word</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Shape identification</td>
@@ -352,7 +352,7 @@ body {
             <div class="af-code-panel active" data-lang="stata">
               <div class="af-code-wrap">
                 <button type="button" class="af-copy-btn">Copy</button>
-                <pre class="af-code"><span class="tok-var">stage1</span> [<span class="tok-fn">pweight</span>=<span class="tok-var">wt_final</span>], <span class="tok-fn">strata</span>(<span class="tok-var">strata1</span>) <span class="tok-fn">fpc</span>(<span class="tok-var">fpc1</span>) <span class="tok-com">||</span> <span class="tok-var">stage2</span>, <span class="tok-fn">strata</span>(<span class="tok-var"></span>) <span class="tok-fn">fpc</span>(<span class="tok-var">fpc2</span>) <span class="tok-com">||</span> <span class="tok-var">stage3</span>, <span class="tok-fn">strata</span>(<span class="tok-var">strata3</span>) <span class="tok-fn">fpc</span>(<span class="tok-var">fpc3</span>) <span class="tok-fn">singleunit</span>(<span class="tok-var">scaled</span>) <span class="tok-fn">vce</span>(<span class="tok-var">linearized</span>)</pre>
+                <pre class="af-code"><span class="tok-fn">svyset</span> <span class="tok-var">stage1</span> [<span class="tok-fn">pweight</span>=<span class="tok-var">wt_final</span>], <span class="tok-fn">strata</span>(<span class="tok-var">strata1</span>) <span class="tok-fn">fpc</span>(<span class="tok-var">fpc1</span>) <span class="tok-com">||</span> <span class="tok-var">stage2</span>, <span class="tok-fn">strata</span>(<span class="tok-var"></span>) <span class="tok-fn">fpc</span>(<span class="tok-var">fpc2</span>) <span class="tok-com">||</span> <span class="tok-var">stage3</span>, <span class="tok-fn">strata</span>(<span class="tok-var">strata3</span>) <span class="tok-fn">fpc</span>(<span class="tok-var">fpc3</span>) <span class="tok-fn">singleunit</span>(<span class="tok-var">scaled</span>) <span class="tok-fn">vce</span>(<span class="tok-var">linearized</span>)</pre>
               </div>
             </div>
             <div class="af-code-panel" data-lang="r">
@@ -536,7 +536,7 @@ linked &lt;- study_round |&gt;
       </aside>
     </div>
     <div class="af-footer">
-      <strong>AHEAD — African Harmonised Early-Grade Assessments Data</strong>
+      <strong>AHEAD — African Harmonised Early-Grade Assessment Data</strong>
        · DataFirst, University of Cape Town
     </div>
     <script>

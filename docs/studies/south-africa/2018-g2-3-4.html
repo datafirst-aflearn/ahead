@@ -215,20 +215,95 @@ body {
         <div id="panel-about" class="af-study-panel active">
           <p>From 2021 to 2023, the Nal’ibali Story Powered Schools (SPS) project aimed to foster a culture of reading for enjoyment among primary school learners in the Eastern Cape and KwaZulu-Natal provinces of South Africa. Designed and implemented by Nal’ibali, the project promoted reading in learners' home languages as well as English through a comprehensive school-based intervention. Activities included training teachers and community volunteers in reading-for-enjoyment approaches, providing age-appropriate reading materials, mentoring schools through regular support visits, establishing and supporting reading clubs, organising holiday reading programmes, and coordinating reading campaigns, events, and competitions. The project sought to strengthen reading habits and improve learners' engagement with reading both inside and outside the classroom.</p>
           <h2 class="af-section-title">Assessment Subtasks</h2>
-          <p style="color:#94A3B8; font-style:italic;">Sub-task availability for this assessment survey is not yet listed in the variable availability matrix.</p>
+          <div class="af-subtask-table-wrap">
+            <table class="af-subtask-table">
+              <thead>
+                <tr>
+                  <th>Sub-task</th>
+                  <th>Prefix</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="af-subtask-name">Vocabulary</td>
+                  <td class="af-subtask-prefix">vocab</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Letter sound identification</td>
+                  <td class="af-subtask-prefix">letter_sound</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Familiar word reading</td>
+                  <td class="af-subtask-prefix">fam_word</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Oral reading fluency</td>
+                  <td class="af-subtask-prefix">oral_read</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Reading comprehension</td>
+                  <td class="af-subtask-prefix">read_comp</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Letter sound identification (second language)</td>
+                  <td class="af-subtask-prefix">l2_letter_sound</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Oral reading fluency (second language)</td>
+                  <td class="af-subtask-prefix">l2_oral_read</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Reading comprehension (second language)</td>
+                  <td class="af-subtask-prefix">l2_read_comp</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Familiar word reading (second language)</td>
+                  <td class="af-subtask-prefix">l2_fam_word</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Print orientation</td>
+                  <td class="af-subtask-prefix">print_orientation</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Phonemic awareness</td>
+                  <td class="af-subtask-prefix">phoneme</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Phonemic awareness (second language)</td>
+                  <td class="af-subtask-prefix">l2_phoneme</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Vocabulary (second language)</td>
+                  <td class="af-subtask-prefix">l2_vocab</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Phoneme combined</td>
+                  <td class="af-subtask-prefix">phoneme_combined</td>
+                </tr>
+                <tr>
+                  <td class="af-subtask-name">Phoneme combined (second language)</td>
+                  <td class="af-subtask-prefix">l2_phoneme_combined</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         <div id="panel-sampling" class="af-study-panel">
           <h2 class="af-section-title">Sampling Description</h2>
           <p style="font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;">The Nal’ibali Story Powered Schools (SPS) evaluation employed a two-stage cluster sampling design within a school-level randomized controlled trial and was designed to estimate the causal impact of the intervention rather than produce nationally representative estimates. In the first stage, 360 primary schools in the Eastern Cape and KwaZulu-Natal provinces were randomly assigned to treatment and control groups. Baseline data collection was conducted over two cohorts (2017 and 2018), with endline data collected approximately two academic years later (2018 and 2019) using the same panel of schools and learners. In the second stage, approximately 30 learners from Grades 2, 3, and 4 were randomly selected within each school, yielding a baseline sample of 10,404 learners. Learners were followed longitudinally, with 8,774 successfully re-interviewed at endline. Assessments included selected Early Grade Reading Assessment (EGRA) subtasks and additional reading and writing exercises administered in isiXhosa and isiZulu. As an impact evaluation, the study was designed to estimate intervention effects within the trial sample rather than to produce population-representative estimates. The harmonised pool contains 19171 pupil records.</p>
           <h2 class="af-section-title">Survey design (svyset)</h2>
-          <p style="color:#94A3B8; font-style:italic;">— not specified —</p>
+          <pre class="af-svyset">N/A</pre>
           <h2 class="af-section-title">Data files</h2>
           <div>
-            <span style="color:#A0AEC0; font-size:12px;">—</span>
+            <div>
+              <div style="font-size:13px; color:#374151; word-break:break-word; margin-bottom:3px;">South Africa SPS 2017_2018 Baseline Learner 2018 05 31.dta</div>
+            </div>
           </div>
           <h2 class="af-section-title">Codebook</h2>
           <div>
-            <span style="color:#A0AEC0; font-size:12px;">—</span>
+            <div>
+              <div style="font-size:13px; color:#374151; word-break:break-word; margin-bottom:3px;">SPS Baseline Codebook.xlsx</div>
+            </div>
           </div>
         </div>
         <div id="panel-link" class="af-study-panel">
@@ -284,17 +359,21 @@ body {
             <div class="af-crosswalk-row">
               <span class="af-crosswalk-var">school_id</span>
               <span class="af-crosswalk-arrow">→</span>
-              <span class="af-crosswalk-var">not yet documented</span>
+              <span class="af-crosswalk-var">id_school</span>
             </div>
             <div class="af-crosswalk-row">
               <span class="af-crosswalk-var">student_id</span>
               <span class="af-crosswalk-arrow">→</span>
-              <span class="af-crosswalk-var">not yet documented</span>
+              <span class="af-crosswalk-var">id_learner</span>
             </div>
           </div>
           <div style="margin-top:0.9rem; display:flex; gap:0.6rem; flex-wrap:wrap;">
-            <span style="color:#A0AEC0; font-size:12px;">—</span>
-            <span style="color:#A0AEC0; font-size:12px;">—</span>
+            <div>
+              <div style="font-size:13px; color:#374151; word-break:break-word; margin-bottom:3px;">South Africa SPS 2017_2018 Baseline Learner 2018 05 31.dta</div>
+            </div>
+            <div>
+              <div style="font-size:13px; color:#374151; word-break:break-word; margin-bottom:3px;">SPS Baseline Codebook.xlsx</div>
+            </div>
           </div>
           <h2 class="af-section-title">3. Join code</h2>
           <div class="af-code-tabs">
@@ -312,11 +391,11 @@ body {
        year == <span class="tok-num">2018</span> &amp; round == <span class="tok-num">1</span>
 
 <span class="tok-com">* 2. Rename AHEAD keys to match the source survey's key names</span>
-<span class="tok-fn">rename</span> <span class="tok-var">school_id</span> <span class="tok-var">school_id_source</span>
-<span class="tok-fn">rename</span> <span class="tok-var">student_id</span> <span class="tok-var">student_id_source</span>
+<span class="tok-fn">rename</span> <span class="tok-var">school_id</span> <span class="tok-var">id_school</span>
+<span class="tok-fn">rename</span> <span class="tok-var">student_id</span> <span class="tok-var">id_learner</span>
 
 <span class="tok-com">* 3. Merge with the source survey microdata (from the codebook/DataLumos link)</span>
-<span class="tok-fn">merge</span> 1:1 <span class="tok-var">school_id_source</span> <span class="tok-var">student_id_source</span> <span class="tok-fn">using</span> <span class="tok-str">&quot;source_survey_file&quot;</span></pre>
+<span class="tok-fn">merge</span> 1:1 <span class="tok-var">id_school</span> <span class="tok-var">id_learner</span> <span class="tok-fn">using</span> <span class="tok-str">&quot;South Africa SPS 2017_2018 Baseline Learner 2018 05 31.dta&quot;</span></pre>
             </div>
           </div>
           <div class="af-code-panel" data-lang="r">
@@ -329,7 +408,7 @@ body {
 ahead  &lt;- <span class="tok-fn">read_dta</span>(<span class="tok-str">&quot;ahead-v1.dta&quot;</span>)
 
 <span class="tok-com"># Source survey microdata for this study round, from the codebook/DataLumos link</span>
-source &lt;- <span class="tok-fn">read_dta</span>(<span class="tok-str">&quot;source_survey_file&quot;</span>)
+source &lt;- <span class="tok-fn">read_dta</span>(<span class="tok-str">&quot;South Africa SPS 2017_2018 Baseline Learner 2018 05 31.dta&quot;</span>)
 
 <span class="tok-com"># 1. Identify the study round</span>
 study_round &lt;- ahead |&gt;
@@ -344,7 +423,7 @@ study_round &lt;- ahead |&gt;
 linked &lt;- study_round |&gt;
   <span class="tok-fn">left_join</span>(
     source,
-    by = c(<span class="tok-str">&quot;school_id&quot;</span> = <span class="tok-str">&quot;school_id_source&quot;</span>, <span class="tok-str">&quot;student_id&quot;</span> = <span class="tok-str">&quot;student_id_source&quot;</span>)
+    by = c(<span class="tok-str">&quot;school_id&quot;</span> = <span class="tok-str">&quot;id_school&quot;</span>, <span class="tok-str">&quot;student_id&quot;</span> = <span class="tok-str">&quot;id_learner&quot;</span>)
   )</pre>
             </div>
           </div>
@@ -380,7 +459,7 @@ linked &lt;- study_round |&gt;
       </aside>
     </div>
     <div class="af-footer">
-      <strong>AHEAD — African Harmonised Early-Grade Assessments Data</strong>
+      <strong>AHEAD — African Harmonised Early-Grade Assessment Data</strong>
        · DataFirst, University of Cape Town
     </div>
     <script>

@@ -35,24 +35,11 @@ source("aflearn_study_pages.R")
 `%||%` <- function(x, y) if (is.null(x) || length(x) == 0 || (length(x) == 1 && is.na(x))) y else x
 
 # Primary catalogue (home page, projects, surveys, subtasks, sampling, linking)
-CATALOGUE_CANDIDATES <- c(
-  "ahead-catalogue-v1.1.xlsx",
-  file.path("data", "ahead-catalogue-v1.1.xlsx"),
-  "ahead-catalogue-v1.xlsx",
-  file.path("data", "ahead-catalogue-v1.xlsx")
-)
+CATALOGUE_CANDIDATES <- c("data/ahead-catalogue-v2.0.xlsx")
 EXCEL_PATH <- CATALOGUE_CANDIDATES[file.exists(CATALOGUE_CANDIDATES)][1]
 if (is.na(EXCEL_PATH)) {
-  stop("ahead-catalogue-v1.1.xlsx (or ahead-catalogue-v1.xlsx) not found in project root or data/.")
+  stop("data/ahead-catalogue-v2.0.xlsx not found.")
 }
-
-# Legacy workbook: optional fallback for per-survey grades
-# (v1.1 catalogue also provides grades via assessment-surveys-external)
-GRADES_CANDIDATES <- c(
-  "EGRA_Harmonization_Waves_Details.xlsx",
-  file.path("data", "EGRA_Harmonization_Waves_Details.xlsx")
-)
-GRADES_PATH <- GRADES_CANDIDATES[file.exists(GRADES_CANDIDATES)][1]
 
 PUBLISH_DIR <- Sys.getenv("AFLEARN_PUBLISH_DIR", unset = "docs")
 STUDIES_DIR <- file.path(PUBLISH_DIR, "studies")
@@ -62,8 +49,9 @@ dir.create(PUBLISH_DIR, recursive = TRUE, showWarnings = FALSE)
 home_meta <- load_home_page(EXCEL_PATH)
 sampling_lookup <- load_sampling_description(EXCEL_PATH)
 
-AFLEARN_LOGO_PATH <- "AFLEARN logo transparent.png"
-DATAFIRST_LOGO_PATH <- "DataFirst and UCT logo.png"
+AFLEARN_LOGO_PATH <- "assets/aflearn-logo.png"
+DATAFIRST_LOGO_PATH <- "assets/datafirst-uct-logo.png"
+
 publish_site_logos(PUBLISH_DIR, AFLEARN_LOGO_PATH, DATAFIRST_LOGO_PATH)
 
 HARMONISED_DATA_URL <- "https://doi.org/10.25828/2287-mw84"
@@ -217,32 +205,6 @@ projects <- projects |>
     by = "proj_key"
   )
 
-# ── Per-survey grades from legacy workbook (preserves Rwanda g1/g2/g3 URLs) ───
-legacy_grades <- NULL
-if (!is.na(GRADES_PATH)) {
-  legacy_raw <- tryCatch(
-    read_excel_sheet_any(GRADES_PATH, c("assessment-surveys", "Study_rounds")),
-    error = function(e) NULL
-  )
-  if (!is.null(legacy_raw)) {
-    names(legacy_raw) <- clean_header_names(names(legacy_raw))
-    grade_col <- names(legacy_raw)[grep("^grade", names(legacy_raw), ignore.case = TRUE)][1]
-    proj_col  <- names(legacy_raw)[grep("^project", names(legacy_raw), ignore.case = TRUE)][1]
-    round_col <- names(legacy_raw)[grep("^round", names(legacy_raw), ignore.case = TRUE)][1]
-    year_col  <- names(legacy_raw)[grep("(data_collection_year|^year$)", names(legacy_raw), ignore.case = TRUE)][1]
-    legacy_grades <- legacy_raw |>
-      filter(!is.na(country_iso) & country_iso != "") |>
-      transmute(
-        ISO = normalize_iso_code(country_iso),
-        Code = str_pad(as.character(.data[[proj_col]]), 3, pad = "0"),
-        Round = as.character(.data[[round_col]]),
-        Year = as.character(.data[[year_col]]),
-        Source = str_trim(as.character(source)),
-        Grade_legacy = .data[[grade_col]]
-      )
-  }
-}
-
 # Grades from catalogue external sheet (v1.1+)
 catalogue_grades <- NULL
 catalogue_grades_raw <- tryCatch(
@@ -319,38 +281,7 @@ rounds <- rounds_raw |>
     }
   )
 
-# Attach legacy per-survey grades (match on ISO+Code+Round+Year+Source when possible)
-if (!is.null(legacy_grades)) {
-  rounds <- rounds |>
-    left_join(
-      legacy_grades,
-      by = c("ISO", "Code", "Round", "Year", "Source")
-    )
-} else {
-  rounds$Grade_legacy <- NA_character_
-}
-
-# Fall back: join without Source for rows still missing (e.g. blank source)
-if (!is.null(legacy_grades)) {
-  still_missing <- is.na(rounds$Grade_legacy) | rounds$Grade_legacy == ""
-  if (any(still_missing)) {
-    legacy_nosrc <- legacy_grades |>
-      group_by(ISO, Code, Round, Year) |>
-      summarise(Grade_legacy2 = dplyr::first(Grade_legacy), .groups = "drop")
-    rounds <- rounds |>
-      left_join(legacy_nosrc, by = c("ISO", "Code", "Round", "Year")) |>
-      mutate(
-        Grade_legacy = ifelse(
-          is.na(Grade_legacy) | Grade_legacy == "",
-          Grade_legacy2,
-          Grade_legacy
-        )
-      ) |>
-      select(-Grade_legacy2)
-  }
-}
-
-# Catalogue external grades (v1.1), then in-sheet / source-key hints
+# Grade from the source key, the survey sheet, then the external sheet.
 if (!is.null(catalogue_grades)) {
   rounds <- rounds |>
     left_join(catalogue_grades, by = c("ISO", "Code", "Round", "Year"))
@@ -361,7 +292,6 @@ if (!is.null(catalogue_grades)) {
 rounds <- rounds |>
   mutate(
     Grade_legacy = dplyr::coalesce(
-      na_if(Grade_legacy, ""),
       na_if(Grade_from_source, ""),
       na_if(Grade_in_sheet, ""),
       na_if(Grade_catalogue, "")
@@ -404,7 +334,7 @@ browse_base <- rounds |>
     Study_Type = ifelse(is.na(Study_Type) | Study_Type == "", "unknown", Study_Type),
     Study_Type_Label = vapply(Study_Type, study_type_label, character(1)),
     Year = ifelse(is.na(Year) | Year == "" | Year == "`", "—", Year),
-    # Prefer legacy per-survey grade; fall back to project Grade(s)
+    # Survey grade, then the project grade
     Grades = {
       g <- mapply(format_grades, Grade_legacy, DataFile_text, USE.NAMES = FALSE)
       ifelse(
@@ -469,8 +399,8 @@ browse_sd_data <- browse_sd_data |>
     Row_arrow = ""
   )
 
-# Visible column order for reactable: Country, Year, Study Name, Grade(s), Assessment, arrow
-vis_cols <- c("Country", "Year", "Study_Name", "Grades", "Assessment", "Row_arrow")
+# Visible column order for reactable: Country, Year, Study Name, Grade(s), Round, Assessment, arrow
+vis_cols <- c("Country", "Year", "Study_Name", "Grades", "Round", "Assessment", "Row_arrow")
 browse_sd_data <- browse_sd_data[, c(vis_cols, setdiff(names(browse_sd_data), vis_cols)), drop = FALSE]
 
 browse_filter <- browse_sd_data |>
@@ -797,6 +727,16 @@ browse_table <- reactable(
         span(v, style = paste0("font-size:14px; color:", AF_INK, "; font-weight:700; white-space:nowrap;"))
       }
     ),
+    Round = colDef(
+      name = "Round", width = 140, minWidth = 140, maxWidth = 140, align = "left", show = TRUE,
+      headerStyle = c(HDR_STYLE, list(flex = "0 0 140px", minWidth = "140px", width = "140px")),
+      style = list(flex = "0 0 140px", whiteSpace = "nowrap", overflow = "visible"),
+      cell = function(v) {
+        if (is.na(v) || v == "" || v == "—")
+          return(span("—", style = "color:#CBD5E0; font-size:11px;"))
+        span(v, style = paste0("font-size:14px; color:", AF_INK, "; font-weight:700; white-space:nowrap;"))
+      }
+    ),
     Assessment = colDef(
       name = "Assessment", width = 130, minWidth = 130, maxWidth = 130, align = "left", show = TRUE,
       headerStyle = c(HDR_STYLE, list(flex = "0 0 130px", minWidth = "130px", width = "130px")),
@@ -848,7 +788,6 @@ browse_table <- reactable(
     Codebook_url = colDef(show = FALSE),
     Svyset = colDef(show = FALSE),
     Source = colDef(show = FALSE),
-    Round = colDef(show = FALSE),
     proj_key = colDef(show = FALSE),
     ISO = colDef(show = FALSE),
     Harmonised_ID = colDef(show = FALSE),
@@ -1374,7 +1313,7 @@ if (window.HTMLWidgets) {
 </script>
 
 <div class="af-footer">
-  <strong>AHEAD — African Harmonised Early-Grade Assessments Data</strong> ·
+  <strong>AHEAD</strong> ·
   DataFirst, University of Cape Town ·
   Access the harmonised dataset via the
   <a href="https://www.datafirst.uct.ac.za/dataportal/index.php" target="_blank" style="color:#1F2937; text-decoration:none;">DataFirst Data Portal</a> ·

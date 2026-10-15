@@ -1,6 +1,6 @@
 # Generates self-contained study detail HTML pages (sourced from aflearn_dataset_reference_5.qmd)
 
-AHEAD_FOOTER_LABEL <- "AHEAD \u2014 African Harmonised Early-Grade Assessments Data"
+AHEAD_FOOTER_LABEL <- "AHEAD \u2014 African Harmonised Early-Grade Assessment Data"
 
 AFLEARN_LOGO_FILE <- "aflearn-logo.png"
 DATAFIRST_LOGO_FILE <- "datafirst-uct-logo.png"
@@ -16,6 +16,7 @@ AF_COUNTRY_SLUG <- c(
   MW = "malawi",
   MA = "morocco",
   RW = "rwanda",
+  SO = "somalia",
   TZ = "tanzania",
   ZM = "zambia",
   ZA = "south-africa",
@@ -56,6 +57,7 @@ AF_ISO_COUNTRY <- c(
   MW = "Malawi",
   MA = "Morocco",
   RW = "Rwanda",
+  SO = "Somalia",
   TZ = "Tanzania",
   ZM = "Zambia",
   ZA = "South Africa",
@@ -132,7 +134,7 @@ normalize_country_to_iso <- function(country, iso_map = AF_ISO_COUNTRY) {
 load_linking_source <- function(path) {
   raw <- read_excel_sheet_any(path, c("link-to-source", "linking-to-source"))
   names(raw) <- clean_header_names(names(raw))
-
+  
   out <- data.frame(
     ISO   = normalize_iso_code(normalize_country_to_iso(raw$country)),
     Year  = suppressWarnings(as.integer(raw$year)),
@@ -168,7 +170,7 @@ find_link_info <- function(linking_source, row) {
   cand <- linking_source[linking_source$link_key == key, , drop = FALSE]
   if (!nrow(cand)) return(NULL)
   if (nrow(cand) == 1) return(as.list(cand[1, ]))
-
+  
   norm_file <- function(x) {
     x <- tolower(gsub("[^a-z0-9]", "", as.character(x)))
     ifelse(is.na(x), "", x)
@@ -181,7 +183,7 @@ find_link_info <- function(linking_source, row) {
     }, logical(1))
     if (sum(hits) == 1) return(as.list(cand[hits, , drop = FALSE][1, ]))
   }
-
+  
   grade_hint <- regmatches(
     tolower(paste(row$Source, row$study_slug)),
     regexpr("g([0-9])", tolower(paste(row$Source, row$study_slug)))
@@ -191,7 +193,7 @@ find_link_info <- function(linking_source, row) {
     hits <- grepl(paste0("grade_?", digit), tolower(cand$datafile_location))
     if (sum(hits) == 1) return(as.list(cand[hits, , drop = FALSE][1, ]))
   }
-
+  
   as.list(cand[1, , drop = FALSE])
 }
 
@@ -205,9 +207,9 @@ assign_study_url_slugs <- function(df) {
   url_base <- paste0(country_slug, "/", df$Year)
   grade_tag <- vapply(df$Grades, grade_url_suffix, character(1))
   n_per_base <- vapply(url_base, function(b) sum(url_base == b), integer(1))
-
+  
   study_slug <- ifelse(n_per_base > 1L, paste0(url_base, grade_tag), url_base)
-
+  
   dup <- duplicated(study_slug) | duplicated(study_slug, fromLast = TRUE)
   if (any(dup)) {
     # Prefer language-based disambiguation (e.g. Uganda Luganda vs Runyankore/Rukiga)
@@ -226,7 +228,7 @@ assign_study_url_slugs <- function(df) {
     study_slug[dup][has_lang] <- paste0(study_slug[dup][has_lang], lang_tag[has_lang])
     study_slug[dup][!has_lang] <- paste0(study_slug[dup][!has_lang], "-r", df$Round[dup][!has_lang])
   }
-
+  
   dup2 <- duplicated(study_slug) | duplicated(study_slug, fromLast = TRUE)
   if (any(dup2)) {
     for (i in which(dup2)) {
@@ -241,13 +243,13 @@ assign_study_url_slugs <- function(df) {
       study_slug[i] <- paste0(study_slug[i], extra, "-r", df$Round[i])
     }
   }
-
+  
   # Final uniqueness guard
   dup3 <- duplicated(study_slug) | duplicated(study_slug, fromLast = TRUE)
   if (any(dup3)) {
     study_slug[dup3] <- paste0(study_slug[dup3], "-", seq_along(study_slug[dup3]))
   }
-
+  
   df$country_slug <- country_slug
   df$study_slug <- study_slug
   # Crosstalk keys must not contain "/" (breaks filter + reactable linkage).
@@ -257,7 +259,8 @@ assign_study_url_slugs <- function(df) {
 }
 
 clean_header_names <- function(nms) {
-  trimws(gsub("\u00a0", " ", nms, fixed = TRUE))
+  nms <- gsub("[\u00a0\u200b\u200c\u200d\ufeff]", " ", nms, perl = TRUE)
+  trimws(nms)
 }
 
 # ── Sheet-name resolver (workbook sheets get renamed over time) ───────────────
@@ -278,7 +281,7 @@ read_excel_sheet_any <- function(path, candidates, ...) {
 load_home_page <- function(path) {
   raw <- readxl::read_excel(path, sheet = "home-page")
   names(raw) <- clean_header_names(names(raw))
-
+  
   first <- raw[1, , drop = FALSE]
   pick_col <- function(candidates) {
     hit <- candidates[candidates %in% names(raw)][1]
@@ -292,13 +295,13 @@ load_home_page <- function(path) {
     vals <- vals[!is.na(vals) & nzchar(vals)]
     unique(vals)
   }
-
+  
   fmt_count <- function(x) {
     n <- suppressWarnings(as.integer(gsub("[^0-9]", "", as.character(x))))
     if (is.na(n)) return(as.character(x))
     format(n, big.mark = " ", scientific = FALSE)
   }
-
+  
   list(
     heading     = pick_col(c("Heading")),
     subheading  = pick_col(c("Sub-heading", "Subheading")),
@@ -323,10 +326,39 @@ load_home_page <- function(path) {
 load_subtask_descriptions <- function(path) {
   desc_raw <- read_excel_sheet_any(path, c("subtask-descriptions"))
   names(desc_raw) <- clean_header_names(names(desc_raw))
-  sub_col  <- names(desc_raw)[grep("^subtask", names(desc_raw), ignore.case = TRUE)][1]
-  pref_col <- names(desc_raw)[grep("prefix", names(desc_raw), ignore.case = TRUE)][1]
-  body_col <- names(desc_raw)[grep("description", names(desc_raw), ignore.case = TRUE)][1]
-
+  
+  header_key <- function(nms) gsub("[^A-Za-z0-9]+", "", nms)
+  looks_like_header <- function(keys) {
+    any(grepl("^(subtask|task)$|prefix|description", keys, ignore.case = TRUE))
+  }
+  keys <- header_key(names(desc_raw))
+  # v2 sometimes puts a title in row 1 and the real headers on the next row.
+  if (!looks_like_header(keys) && nrow(desc_raw) > 0) {
+    first <- clean_header_names(as.character(unlist(desc_raw[1, ], use.names = FALSE)))
+    if (looks_like_header(header_key(first))) {
+      names(desc_raw) <- first
+      desc_raw <- desc_raw[-1, , drop = FALSE]
+      keys <- header_key(names(desc_raw))
+    }
+  }
+  
+  pick <- function(pattern) {
+    hit <- grep(pattern, keys, ignore.case = TRUE, perl = TRUE)
+    if (!length(hit)) return(NA_character_)
+    names(desc_raw)[hit[1]]
+  }
+  sub_col <- pick("^subtask")
+  if (is.na(sub_col)) sub_col <- pick("^task")
+  pref_col <- pick("prefix")
+  if (is.na(pref_col)) pref_col <- pick("^variable")
+  body_col <- pick("description")
+  if (is.na(sub_col) || is.na(pref_col)) {
+    stop(
+      "subtask-descriptions needs a task column and a variable or prefix column. Headers: ",
+      paste(sprintf("'%s'", names(desc_raw)), collapse = ", ")
+    )
+  }
+  
   rows <- list()
   for (i in seq_len(nrow(desc_raw))) {
     label <- trimws(gsub("\u00a0", " ", as.character(desc_raw[[sub_col]][i]), fixed = TRUE))
@@ -350,7 +382,7 @@ load_subtask_descriptions <- function(path) {
     }
   }
   lookup <- do.call(rbind, rows)
-
+  
   # Enrich with Assessment / Core / alternate prefixes from subtask-labels when present
   lab_raw <- tryCatch(
     read_excel_sheet_any(path, c("subtask-labels")),
@@ -358,11 +390,21 @@ load_subtask_descriptions <- function(path) {
   )
   if (!is.null(lab_raw)) {
     names(lab_raw) <- clean_header_names(names(lab_raw))
-    l_pref <- names(lab_raw)[grep("prefix", names(lab_raw), ignore.case = TRUE)][1]
-    l_task <- names(lab_raw)[grep("^task", names(lab_raw), ignore.case = TRUE)][1]
-    l_assess <- names(lab_raw)[grep("assessment", names(lab_raw), ignore.case = TRUE)][1]
-    l_core <- names(lab_raw)[grep("^core", names(lab_raw), ignore.case = TRUE)][1]
-    l_alt <- names(lab_raw)[grep("alternate", names(lab_raw), ignore.case = TRUE)][1]
+    lab_keys <- header_key(names(lab_raw))
+    pick_lab <- function(pattern) {
+      hit <- grep(pattern, lab_keys, ignore.case = TRUE, perl = TRUE)
+      if (!length(hit)) return(NA_character_)
+      names(lab_raw)[hit[1]]
+    }
+    l_pref <- pick_lab("prefix")
+    if (is.na(l_pref)) l_pref <- pick_lab("^variable")
+    l_task <- pick_lab("^task")
+    l_assess <- pick_lab("assessment")
+    l_core <- pick_lab("^core")
+    l_alt <- pick_lab("alternate")
+    if (is.na(l_pref) || is.na(l_task)) lab_raw <- NULL
+  }
+  if (!is.null(lab_raw)) {
     for (i in seq_len(nrow(lab_raw))) {
       pref <- normalize_task_key(lab_raw[[l_pref]][i])
       if (!nzchar(pref)) next
@@ -415,7 +457,7 @@ load_subtask_descriptions <- function(path) {
       }
     }
   }
-
+  
   lookup <- lookup[!is.na(lookup$task_id) & nzchar(lookup$task_id), , drop = FALSE]
   lookup[!duplicated(lookup$task_id), , drop = FALSE]
 }
@@ -434,7 +476,7 @@ resolve_subtask_meta <- function(prefix, desc_lookup) {
       core = hit$core[1] %||% ""
     ))
   }
-
+  
   suffix_note <- character(0)
   base <- raw
   if (grepl("^l2_", base)) {
@@ -449,7 +491,7 @@ resolve_subtask_meta <- function(prefix, desc_lookup) {
     base <- sub("^we_", "", base)
     suffix_note <- c(suffix_note, "written exercise")
   }
-
+  
   # Prefer an exact match on the stripped prefix (e.g. vocabB = Vocabulary (spatial))
   # before treating a trailing B as a version marker.
   base_key <- normalize_task_key(base)
@@ -462,7 +504,7 @@ resolve_subtask_meta <- function(prefix, desc_lookup) {
       if (!"version B" %in% suffix_note) suffix_note <- c(suffix_note, "version B")
     }
   }
-
+  
   if (nrow(base_hit)) {
     note <- if (length(suffix_note)) paste0(" (", paste(suffix_note, collapse = ", "), ")") else ""
     return(list(
@@ -473,7 +515,7 @@ resolve_subtask_meta <- function(prefix, desc_lookup) {
       core = base_hit$core[1] %||% ""
     ))
   }
-
+  
   list(
     task_id = key,
     task_label = stringr::str_to_title(gsub("_", " ", key)),
@@ -487,25 +529,25 @@ resolve_subtask_meta <- function(prefix, desc_lookup) {
 load_subtask_availability <- function(path, desc_lookup = NULL) {
   raw <- read_excel_sheet_any(path, c("assessment-subtasks"))
   names(raw) <- clean_header_names(names(raw))
-
+  
   iso_col <- names(raw)[grep("country_iso", names(raw), ignore.case = TRUE)][1]
   proj_col <- names(raw)[grep("project", names(raw), ignore.case = TRUE)][1]
   round_col <- names(raw)[grep("^round$", names(raw), ignore.case = TRUE)][1]
   year_col <- names(raw)[grep("^year$", names(raw), ignore.case = TRUE)][1]
   score_cols <- names(raw)[grepl("_score$", names(raw), ignore.case = TRUE)]
-
+  
   present_val <- function(x) {
     v <- toupper(trimws(as.character(x)))
     !is.na(v) & v %in% c("YES", "Y", "TRUE", "1")
   }
-
+  
   if (is.null(desc_lookup)) {
     desc_lookup <- data.frame(
       task_id = character(), task_label = character(), description = character(),
       assessment = character(), core = character(), stringsAsFactors = FALSE
     )
   }
-
+  
   pieces <- list()
   for (i in seq_len(nrow(raw))) {
     iso <- normalize_iso_code(raw[[iso_col]][i])
@@ -514,7 +556,7 @@ load_subtask_availability <- function(path, desc_lookup = NULL) {
     round_v <- as.character(raw[[round_col]][i])
     year_v <- as.character(raw[[year_col]][i])
     survey_key <- paste(iso, code, round_v, year_v, sep = "|")
-
+    
     for (col in score_cols) {
       if (!present_val(raw[[col]][i])) next
       prefix <- sub("(?i)_score$", "", col, perl = TRUE)
@@ -642,10 +684,10 @@ build_join_code_r <- function(info, row) {
   school_s <- link_var(info$school_id_source, "school_id_source")
   student_s <- link_var(info$student_id_source, "student_id_source")
   src_file <- link_var(info$datafile_location, "source_survey_file")
-
+  
   fn <- .code_tok_fn; str_ <- .code_tok_str; num <- .code_tok_num
   var_ <- .code_tok_var; com <- function(x) .code_tok_com(x, "#")
-
+  
   paste(
     sprintf("%s(dplyr)", fn("library")),
     sprintf("%s(haven)", fn("library")),
@@ -684,10 +726,10 @@ build_join_code_stata <- function(info, row) {
   school_s <- link_var(info$school_id_source, "school_id_source")
   student_s <- link_var(info$student_id_source, "student_id_source")
   src_file <- link_var(info$datafile_location, "source_survey_file")
-
+  
   fn <- .code_tok_fn; str_ <- .code_tok_str; num <- .code_tok_num
   var_ <- .code_tok_var; com <- function(x) .code_tok_com(x, "*")
-
+  
   paste(
     com("AHEAD harmonised file (rename to wherever you saved it)"),
     sprintf("%s %s, %s", fn("use"), str_("ahead-v1.dta"), fn("clear")),
@@ -713,11 +755,11 @@ build_join_code_stata <- function(info, row) {
 load_sampling_description <- function(path) {
   raw <- read_excel_sheet_any(path, c("sampling-description"))
   names(raw) <- clean_header_names(names(raw))
-
+  
   iso_col <- names(raw)[grep("country_iso", names(raw), ignore.case = TRUE)][1]
   code_col <- names(raw)[grep("project code|project_code", names(raw), ignore.case = TRUE)][1]
   samp_col <- names(raw)[grep("^sampling$", names(raw), ignore.case = TRUE)][1]
-
+  
   out <- data.frame(
     ISO = normalize_iso_code(raw[[iso_col]]),
     Code = vapply(raw[[code_col]], str_pad_code, character(1)),
@@ -746,7 +788,7 @@ find_sampling_text <- function(sampling_lookup, row) {
 sampling_prose_html <- function(text) {
   if (is.null(text) || length(text) == 0 || is.na(text) || !nzchar(trimws(text))) {
     return(tags$p(style = "color:#94A3B8; font-style:italic; margin:0;",
-      "Sampling design details not yet documented."))
+                  "Sampling design details not yet documented."))
   }
   tags$p(style = "font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;", text)
 }
@@ -777,19 +819,19 @@ parse_svyset_stata <- function(text) {
   if (!grepl("||", work, fixed = TRUE)) {
     return(NULL)
   }
-
+  
   body <- sub("(?i)^svyset\\s+", "", work, perl = TRUE)
-
+  
   extract1 <- function(pattern, x) {
     m <- regmatches(x, regexpr(pattern, x, perl = TRUE))
     if (!length(m)) return(NA_character_)
     sub(pattern, "\\1", m, perl = TRUE)
   }
-
+  
   weight_var <- extract1("\\[pweight=([^\\]]+)\\]", body)
   singleunit_val <- extract1("singleunit\\(([^)]*)\\)", body)
   vce_val <- extract1("vce\\(([^)]*)\\)", body)
-
+  
   chunks <- trimws(strsplit(body, "\\|\\|")[[1]])
   stages <- lapply(chunks, function(ch) {
     psu <- extract1("^([A-Za-z0-9_]+)", ch)
@@ -801,7 +843,7 @@ parse_svyset_stata <- function(text) {
   })
   stages <- stages[!vapply(stages, function(s) is.na(s$psu), logical(1))]
   if (length(stages) < 2) return(NULL)
-
+  
   list(
     raw = text,
     stages = stages,
@@ -814,11 +856,11 @@ parse_svyset_stata <- function(text) {
 .singleunit_to_lonely_psu <- function(val) {
   if (is.na(val)) return(NA_character_)
   switch(val,
-    scaled    = "adjust",
-    missing   = "remove",
-    certainty = "certainty",
-    centered  = "average",
-    NA_character_
+         scaled    = "adjust",
+         missing   = "remove",
+         certainty = "certainty",
+         centered  = "average",
+         NA_character_
   )
 }
 
@@ -848,24 +890,24 @@ highlight_svyset_stata_html <- function(text, parsed = NULL) {
 build_svydesign_code_r <- function(parsed) {
   fn <- .code_tok_fn; str_ <- .code_tok_str; var_ <- .code_tok_var
   com <- function(x) .code_tok_com(x, "#")
-
+  
   ids_vars    <- vapply(parsed$stages, function(s) s$psu, character(1))
   strata_vars <- vapply(parsed$stages, function(s) s$strata, character(1))
   fpc_vars    <- vapply(parsed$stages, function(s) s$fpc, character(1))
-
+  
   has_strata   <- any(!is.na(strata_vars))
   has_fpc      <- any(!is.na(fpc_vars))
   mixed_strata <- has_strata && any(is.na(strata_vars))
   mixed_fpc    <- has_fpc && any(is.na(fpc_vars))
-
+  
   lonely <- .singleunit_to_lonely_psu(parsed$singleunit)
-
+  
   lines <- c(
     com("`ahead`: your AHEAD harmonised data frame for this assessment survey"),
     sprintf("%s(survey)", fn("library")),
     ""
   )
-
+  
   if (!is.na(lonely)) {
     lines <- c(
       lines,
@@ -874,7 +916,7 @@ build_svydesign_code_r <- function(parsed) {
       ""
     )
   }
-
+  
   design_lines <- sprintf("design &lt;- %s(", fn("svydesign"))
   design_lines <- c(design_lines, sprintf("  ids     = ~%s,", .fmt_formula_terms(ids_vars)))
   if (has_strata) design_lines <- c(design_lines, sprintf("  strata  = ~%s,", .fmt_formula_terms(strata_vars)))
@@ -883,9 +925,9 @@ build_svydesign_code_r <- function(parsed) {
     design_lines <- c(design_lines, sprintf("  weights = ~%s,", var_(parsed$weight)))
   }
   design_lines <- c(design_lines, "  data    = ahead,", "  nest    = TRUE", ")")
-
+  
   lines <- c(lines, design_lines)
-
+  
   if (mixed_strata || mixed_fpc) {
     lines <- c(lines, "", com("Stages without a documented stratification/fpc variable use 1 as a constant placeholder"))
   }
@@ -894,7 +936,7 @@ build_svydesign_code_r <- function(parsed) {
   } else {
     lines <- c(lines, com("Default variance method (Taylor linearisation) matches vce(linearized)"))
   }
-
+  
   paste(lines, collapse = "\n")
 }
 
@@ -1161,11 +1203,11 @@ build_task_label_lookup <- function(task_meaning) {
   prefix_col <- cols[grep("prefix", cols, ignore.case = TRUE)][1]
   task_col   <- cols[grep("^task", cols, ignore.case = TRUE)][1]
   alt_col    <- cols[grep("alternate", cols, ignore.case = TRUE)][1]
-
+  
   rows <- lapply(seq_len(nrow(task_meaning)), function(i) {
     prefix <- normalize_task_key(task_meaning[[prefix_col]][i])
     task   <- trimws(as.character(task_meaning[[task_col]][i]))
-  if (is.na(task) || task == "") return(NULL)
+    if (is.na(task) || task == "") return(NULL)
     out <- data.frame(key = prefix, label = task, stringsAsFactors = FALSE)
     if (!is.na(alt_col)) {
       alts <- strsplit(as.character(task_meaning[[alt_col]][i]), ",")[[1]]
@@ -1512,13 +1554,13 @@ link_panel_html <- function(row, link_info, file_cell, link_pill) {
   if (is.null(link_info)) {
     return(
       tags$div(id = "panel-link", class = "af-study-panel",
-        tags$h2(class = "af-section-title", "Link to Source"),
-        tags$p(style = "color:#94A3B8; font-style:italic;",
-          "Source-linking details for this assessment survey are not yet available.")
+               tags$h2(class = "af-section-title", "Link to Source"),
+               tags$p(style = "color:#94A3B8; font-style:italic;",
+                      "Source-linking details for this assessment survey are not yet available.")
       )
     )
   }
-
+  
   segments <- build_id_anatomy_segments(row)
   seg_tags <- list()
   for (i in seq_along(segments)) {
@@ -1532,7 +1574,7 @@ link_panel_html <- function(row, link_info, file_cell, link_pill) {
       seg_tags[[length(seg_tags) + 1]] <- tags$div(class = "af-id-plus", "+")
     }
   }
-
+  
   pill_row <- tags$div(
     class = "af-link-pills",
     tags$span(class = "af-link-pill", glue("{row$Country} ({row$ISO})")),
@@ -1540,68 +1582,68 @@ link_panel_html <- function(row, link_info, file_cell, link_pill) {
     tags$span(class = "af-link-pill", glue("Project {row$Code}")),
     tags$span(class = "af-link-pill", glue("Round/Wave {row$Round}"))
   )
-
+  
   crosswalk <- tags$div(
     class = "af-crosswalk",
     tags$div(class = "af-crosswalk-row af-crosswalk-head",
-      tags$span("AHEAD variable"), tags$span(""), tags$span("Source variable")
+             tags$span("AHEAD variable"), tags$span(""), tags$span("Source variable")
     ),
     tags$div(class = "af-crosswalk-row",
-      tags$span(class = "af-crosswalk-var", link_var(link_info$school_id_harmonized, "school_id")),
-      tags$span(class = "af-crosswalk-arrow", "\u2192"),
-      tags$span(class = "af-crosswalk-var", link_var(link_info$school_id_source, "not yet documented"))
+             tags$span(class = "af-crosswalk-var", link_var(link_info$school_id_harmonized, "school_id")),
+             tags$span(class = "af-crosswalk-arrow", "\u2192"),
+             tags$span(class = "af-crosswalk-var", link_var(link_info$school_id_source, "not yet documented"))
     ),
     tags$div(class = "af-crosswalk-row",
-      tags$span(class = "af-crosswalk-var", link_var(link_info$student_id_harmonized, "student_id")),
-      tags$span(class = "af-crosswalk-arrow", "\u2192"),
-      tags$span(class = "af-crosswalk-var", link_var(link_info$student_id_source, "not yet documented"))
+             tags$span(class = "af-crosswalk-var", link_var(link_info$student_id_harmonized, "student_id")),
+             tags$span(class = "af-crosswalk-arrow", "\u2192"),
+             tags$span(class = "af-crosswalk-var", link_var(link_info$student_id_source, "not yet documented"))
     )
   )
-
+  
   code_r     <- build_join_code_r(link_info, row)
   code_stata <- build_join_code_stata(link_info, row)
-
+  
   tags$div(id = "panel-link", class = "af-study-panel",
-    tags$p(
-      "Use this recipe to merge AHEAD's harmonised records for this assessment ",
-      "survey back to the original source microdata \u2014 for example, to pull in ",
-      "socio-economic variables that were not part of the harmonisation."
-    ),
-    tags$h2(class = "af-section-title", "1. Identify the study round"),
-    pill_row,
-    tags$p(style = "color:#64748B; font-size:0.9rem; margin:0.75rem 0;",
-      "The harmonised student ID below encodes country, project and round. The ",
-      "school and student segments (in grey) are unique per record and are not shown here."),
-    tags$div(class = "af-id-anatomy", seg_tags),
-
-    tags$h2(class = "af-section-title", "2. Key crosswalk"),
-    crosswalk,
-    tags$div(
-      style = "margin-top:0.9rem; display:flex; gap:0.6rem; flex-wrap:wrap;",
-      file_cell(row$DataFile_text, row$DataFile_url),
-      file_cell(row$Codebook_text, row$Codebook_url)
-    ),
-
-    tags$h2(class = "af-section-title", "3. Join code"),
-    tags$div(
-      class = "af-code-tabs",
-      tags$button(type = "button", class = "af-code-tab active", `data-lang` = "stata", "Stata"),
-      tags$button(type = "button", class = "af-code-tab", `data-lang` = "r", "R")
-    ),
-    tags$div(class = "af-code-panel active", `data-lang` = "stata",
-      tags$div(
-        class = "af-code-wrap",
-        tags$button(type = "button", class = "af-copy-btn", "Copy"),
-        tags$pre(class = "af-code", HTML(code_stata))
-      )
-    ),
-    tags$div(class = "af-code-panel", `data-lang` = "r",
-      tags$div(
-        class = "af-code-wrap",
-        tags$button(type = "button", class = "af-copy-btn", "Copy"),
-        tags$pre(class = "af-code", HTML(code_r))
-      )
-    )
+           tags$p(
+             "Use this recipe to merge AHEAD's harmonised records for this assessment ",
+             "survey back to the original source microdata \u2014 for example, to pull in ",
+             "socio-economic variables that were not part of the harmonisation."
+           ),
+           tags$h2(class = "af-section-title", "1. Identify the study round"),
+           pill_row,
+           tags$p(style = "color:#64748B; font-size:0.9rem; margin:0.75rem 0;",
+                  "The harmonised student ID below encodes country, project and round. The ",
+                  "school and student segments (in grey) are unique per record and are not shown here."),
+           tags$div(class = "af-id-anatomy", seg_tags),
+           
+           tags$h2(class = "af-section-title", "2. Key crosswalk"),
+           crosswalk,
+           tags$div(
+             style = "margin-top:0.9rem; display:flex; gap:0.6rem; flex-wrap:wrap;",
+             file_cell(row$DataFile_text, row$DataFile_url),
+             file_cell(row$Codebook_text, row$Codebook_url)
+           ),
+           
+           tags$h2(class = "af-section-title", "3. Join code"),
+           tags$div(
+             class = "af-code-tabs",
+             tags$button(type = "button", class = "af-code-tab active", `data-lang` = "stata", "Stata"),
+             tags$button(type = "button", class = "af-code-tab", `data-lang` = "r", "R")
+           ),
+           tags$div(class = "af-code-panel active", `data-lang` = "stata",
+                    tags$div(
+                      class = "af-code-wrap",
+                      tags$button(type = "button", class = "af-copy-btn", "Copy"),
+                      tags$pre(class = "af-code", HTML(code_stata))
+                    )
+           ),
+           tags$div(class = "af-code-panel", `data-lang` = "r",
+                    tags$div(
+                      class = "af-code-wrap",
+                      tags$button(type = "button", class = "af-copy-btn", "Copy"),
+                      tags$pre(class = "af-code", HTML(code_r))
+                    )
+           )
   )
 }
 
@@ -1609,15 +1651,15 @@ sampling_design_html <- function(svyset) {
   if (svyset == "— not specified —") {
     return(tags$p(style = "color:#94A3B8; font-style:italic;", svyset))
   }
-
+  
   parsed <- parse_svyset_stata(svyset)
   if (is.null(parsed)) {
     return(tags$pre(class = "af-svyset", svyset))
   }
-
+  
   stata_html <- highlight_svyset_stata_html(svyset, parsed)
   r_html <- build_svydesign_code_r(parsed)
-
+  
   tags$div(
     tags$div(
       class = "af-code-tabs",
@@ -1625,18 +1667,18 @@ sampling_design_html <- function(svyset) {
       tags$button(type = "button", class = "af-code-tab", `data-lang` = "r", "R")
     ),
     tags$div(class = "af-code-panel active", `data-lang` = "stata",
-      tags$div(
-        class = "af-code-wrap",
-        tags$button(type = "button", class = "af-copy-btn", "Copy"),
-        tags$pre(class = "af-code", HTML(stata_html))
-      )
+             tags$div(
+               class = "af-code-wrap",
+               tags$button(type = "button", class = "af-copy-btn", "Copy"),
+               tags$pre(class = "af-code", HTML(stata_html))
+             )
     ),
     tags$div(class = "af-code-panel", `data-lang` = "r",
-      tags$div(
-        class = "af-code-wrap",
-        tags$button(type = "button", class = "af-copy-btn", "Copy"),
-        tags$pre(class = "af-code", HTML(r_html))
-      )
+             tags$div(
+               class = "af-code-wrap",
+               tags$button(type = "button", class = "af-copy-btn", "Copy"),
+               tags$pre(class = "af-code", HTML(r_html))
+             )
     )
   )
 }
@@ -1651,7 +1693,7 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
   if (is.null(catalogue_url)) catalogue_url <- index_url
   aflearn_logo_src <- study_asset_url(row$study_slug, AFLEARN_LOGO_FILE)
   datafirst_logo_src <- study_asset_url(row$study_slug, DATAFIRST_LOGO_FILE)
-
+  
   # Prefer catalogue labels (incl. l2_/unt_ modifiers) when availability rows exist
   subtask_rows <- lapply(present_task_ids, function(task_id) {
     title <- NULL
@@ -1682,7 +1724,7 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
       tags$td(class = "af-subtask-prefix", prefix)
     )
   })
-
+  
   # Prefer Assessment column from about-the-program when present
   assessment_label <- if (!is.null(row$Assessment) && !is.na(row$Assessment) && nzchar(as.character(row$Assessment))) {
     as.character(row$Assessment)
@@ -1699,7 +1741,7 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
       "EGRA"
     }
   }
-
+  
   desc <- ifelse(is.na(row$Description) || row$Description == "" ||
                    toupper(trimws(as.character(row$Description))) %in% c("NA", "UNKNOWN"),
                  "\u2014", row$Description)
@@ -1707,14 +1749,14 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
     sampling_text <- if (!is.null(row$Sampling)) row$Sampling else NA_character_
   }
   svyset <- ifelse(is.na(row$Svyset) || row$Svyset == "", "— not specified —", row$Svyset)
-
+  
   study_name_disp <- row$Study_Name
   if (is.na(study_name_disp) || !nzchar(study_name_disp) ||
       toupper(trimws(as.character(study_name_disp))) %in% c("NA", "NA (NA)")) {
     study_name_disp <- paste(row$Country, "assessment survey")
   }
   title_text <- glue("{row$Year} {study_name_disp}")
-
+  
   tags$html(
     tags$head(
       tags$meta(charset = "UTF-8"),
@@ -1752,36 +1794,36 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
             tags$button(type = "button", class = "af-study-tab", `data-panel` = "link", "Link to Source")
           ),
           tags$div(id = "panel-about", class = "af-study-panel active",
-            tags$p(desc),
-            tags$h2(class = "af-section-title", "Assessment Subtasks"),
-            if (length(subtask_rows)) {
-              tags$div(
-                class = "af-subtask-table-wrap",
-                tags$table(
-                  class = "af-subtask-table",
-                  tags$thead(
-                    tags$tr(
-                      tags$th("Sub-task"),
-                      tags$th("Prefix")
-                    )
-                  ),
-                  tags$tbody(subtask_rows)
-                )
-              )
-            } else {
-              tags$p(style = "color:#94A3B8; font-style:italic;",
-                "Sub-task availability for this assessment survey is not yet listed in the variable availability matrix.")
-            }
+                   tags$p(desc),
+                   tags$h2(class = "af-section-title", "Assessment Subtasks"),
+                   if (length(subtask_rows)) {
+                     tags$div(
+                       class = "af-subtask-table-wrap",
+                       tags$table(
+                         class = "af-subtask-table",
+                         tags$thead(
+                           tags$tr(
+                             tags$th("Sub-task"),
+                             tags$th("Prefix")
+                           )
+                         ),
+                         tags$tbody(subtask_rows)
+                       )
+                     )
+                   } else {
+                     tags$p(style = "color:#94A3B8; font-style:italic;",
+                            "Sub-task availability for this assessment survey is not yet listed in the variable availability matrix.")
+                   }
           ),
           tags$div(id = "panel-sampling", class = "af-study-panel",
-            tags$h2(class = "af-section-title", "Sampling Description"),
-            sampling_prose_html(sampling_text),
-            tags$h2(class = "af-section-title", "Survey design (svyset)"),
-            sampling_design_html(svyset),
-            tags$h2(class = "af-section-title", "Data files"),
-            tags$div(file_cell(row$DataFile_text, row$DataFile_url)),
-            tags$h2(class = "af-section-title", "Codebook"),
-            tags$div(file_cell(row$Codebook_text, row$Codebook_url))
+                   tags$h2(class = "af-section-title", "Sampling Description"),
+                   sampling_prose_html(sampling_text),
+                   tags$h2(class = "af-section-title", "Survey design (svyset)"),
+                   sampling_design_html(svyset),
+                   tags$h2(class = "af-section-title", "Data files"),
+                   tags$div(file_cell(row$DataFile_text, row$DataFile_url)),
+                   tags$h2(class = "af-section-title", "Codebook"),
+                   tags$div(file_cell(row$Codebook_text, row$Codebook_url))
           ),
           link_panel_html(row, link_info, file_cell, link_pill)
         ),
@@ -1790,28 +1832,28 @@ build_study_detail_page <- function(row, present_task_ids, desc_lookup, copy_loo
           tags$div(
             class = "af-meta-card",
             tags$div(class = "af-meta-row",
-              tags$span(class = "af-meta-label", "Year"),
-              tags$span(class = "af-meta-value", row$Year)
+                     tags$span(class = "af-meta-label", "Year"),
+                     tags$span(class = "af-meta-value", row$Year)
             ),
             tags$div(class = "af-meta-row",
-              tags$span(class = "af-meta-label", "Grade(s)"),
-              tags$span(class = "af-meta-value", row$Grades)
+                     tags$span(class = "af-meta-label", "Grade(s)"),
+                     tags$span(class = "af-meta-value", row$Grades)
             ),
             tags$div(class = "af-meta-row",
-              tags$span(class = "af-meta-label", "Language"),
-              tags$span(class = "af-meta-value", row$Languages)
+                     tags$span(class = "af-meta-label", "Language"),
+                     tags$span(class = "af-meta-value", row$Languages)
             ),
             tags$div(class = "af-meta-row",
-              tags$span(class = "af-meta-label", "Country"),
-              tags$span(class = "af-meta-value", row$Country)
+                     tags$span(class = "af-meta-label", "Country"),
+                     tags$span(class = "af-meta-value", row$Country)
             ),
             tags$div(class = "af-meta-row",
-              tags$span(class = "af-meta-label", "Assessment"),
-              tags$span(class = "af-meta-value", assessment_label)
+                     tags$span(class = "af-meta-label", "Assessment"),
+                     tags$span(class = "af-meta-value", assessment_label)
             ),
             tags$div(class = "af-meta-row",
-              tags$span(class = "af-meta-label", "Study type"),
-              tags$span(class = "af-meta-value", study_type_label(row$Study_Type))
+                     tags$span(class = "af-meta-label", "Study type"),
+                     tags$span(class = "af-meta-value", study_type_label(row$Study_Type))
             ),
             if (!is.na(row$DataLumos) && row$DataLumos != "") {
               tags$div(
@@ -1891,9 +1933,9 @@ write_study_detail_pages <- function(browse_base, subtask_desc, va_matrix,
   dir.create(studies_dir, showWarnings = FALSE, recursive = TRUE)
   old_files <- list.files(studies_dir, pattern = "\\.html$", full.names = TRUE, recursive = TRUE)
   if (length(old_files)) unlink(old_files)
-
+  
   warn_missing_matrix_cols(browse_base, va_matrix)
-
+  
   for (i in seq_len(nrow(browse_base))) {
     slug <- browse_base$study_slug[i]
     row  <- browse_base[i, ]
@@ -1925,9 +1967,9 @@ write_study_detail_pages <- function(browse_base, subtask_desc, va_matrix,
 
 # ── Landing page (docs/index.html) ──────────────────────────────────────────
 write_landing_page <- function(outfile,
-                                title, subheading, description,
-                                n_countries, n_projects, n_surveys, n_persons,
-                                last_updated, harmonised_data_url) {
+                               title, subheading, description,
+                               n_countries, n_projects, n_surveys, n_persons,
+                               last_updated, harmonised_data_url) {
   page <- tags$html(
     tags$head(
       tags$meta(charset = "UTF-8"),

@@ -213,7 +213,7 @@ body {
           <button type="button" class="af-study-tab" data-panel="link">Link to Source</button>
         </nav>
         <div id="panel-about" class="af-study-panel active">
-          <p>In 2013, the Tanzania National EGRA-EGMA-SSME, a USAID-funded project implemented under the global Education Data for Decision-Making (EdData II) initiative (specifically Task Orders 19 and 24), aimed to provide evidence on early grade learner achievement and contextual factors associated with educational quality among Grade 2 learners, implemented within the context of Tanzania's Big Results Now (BRN) initiative to accelerate socioeconomic development and improve education quality. Data were collected using the Early Grade Reading Assessment (EGRA), Early Grade Mathematics Assessment (EGMA), and Snapshot of School Management Effectiveness (SSME) in English and Kiswahili. The project was nationally representative, with schools sampled across high-, average-, and low-performing categories based on 2012 Primary School Leaving Examination results.</p>
+          <p>In 2013, the Tanzania National EGRA-EGMA-SSME, a USAID-funded project implemented under the global Education Data for Decision-Making (EdData II) initiative (specifically Task Orders 19 and 24), aimed to provide evidence on early grade learner achievement and contextual factors associated with educational quality among Grade 2 learners, implemented within the context of Tanzania's Big Results Now (BRN) initiative to accelerate socioeconomic development and improve education quality. Data were collected using the Early Grade Reading Assessment (EGRA), Early Grade Mathematics Assessment (EGMA), and Snapshot of School Management Effectiveness (SSME) in English and Kiswahili. The project covered mainland Tanzania only (Zanzibar was not included) and was representative of mainland Tanzania, with schools sampled across high-, average-, and low-performing categories based on 2012 Primary School Leaving Examination results.</p>
           <h2 class="af-section-title">Assessment Subtasks</h2>
           <div class="af-subtask-table-wrap">
             <table class="af-subtask-table">
@@ -266,11 +266,11 @@ body {
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Oral reading fluency (second language)</td>
-                  <td class="af-subtask-prefix">l2oralread</td>
+                  <td class="af-subtask-prefix">l2_oral_read</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Reading comprehension (second language)</td>
-                  <td class="af-subtask-prefix">l2readcomp</td>
+                  <td class="af-subtask-prefix">l2_read_comp</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Written addition</td>
@@ -281,28 +281,28 @@ body {
                   <td class="af-subtask-prefix">we_sub</td>
                 </tr>
                 <tr>
-                  <td class="af-subtask-name">Syllable identification</td>
+                  <td class="af-subtask-name">Syllable segmentation</td>
                   <td class="af-subtask-prefix">syllable_sound</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Initial sound identification (second language)</td>
-                  <td class="af-subtask-prefix">l2painitsound</td>
+                  <td class="af-subtask-prefix">l2_pa_init_sound</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Familiar word reading (second language)</td>
-                  <td class="af-subtask-prefix">l2famword</td>
+                  <td class="af-subtask-prefix">l2_fam_word</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Letter name identification (second language)</td>
-                  <td class="af-subtask-prefix">l2lettername</td>
+                  <td class="af-subtask-prefix">l2_letter_name</td>
                 </tr>
                 <tr>
                   <td class="af-subtask-name">Word dictation</td>
                   <td class="af-subtask-prefix">dict_word</td>
                 </tr>
                 <tr>
-                  <td class="af-subtask-name">Dictsent</td>
-                  <td class="af-subtask-prefix">dictsent</td>
+                  <td class="af-subtask-name">Sentence dictation</td>
+                  <td class="af-subtask-prefix">dict_sent</td>
                 </tr>
               </tbody>
             </table>
@@ -310,7 +310,7 @@ body {
         </div>
         <div id="panel-sampling" class="af-study-panel">
           <h2 class="af-section-title">Sampling Description</h2>
-          <p style="font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;">The Tanzania National EGRA-EGMA-SSME employed a four-stage stratified cluster sampling design and were designed to produce nationally representative estimates of Grade 2 learning outcomes in mainland Tanzania. In the first stage, 20 local government councils were selected with probability proportional to the number of schools after stratification by urban and rural location. In the second stage, 200 schools were selected within sampled councils, stratified into high-, medium-, and low-performing categories based on 2012 Primary School Leaving Examination results and sampled with probability proportional to Grade 2 enrolment. In the third stage, one Grade 2 classroom and its teacher were randomly selected within each sampled school. In the fourth stage, approximately 10–14 Grade 2 pupils (five to seven boys and five to seven girls) were randomly selected from the sampled classroom following gender stratification. The harmonized dataset contains 2,266 Grade 2 pupil records. Final pupil weights (`wt_final`) incorporate the probabilities of selection and were calibrated to estimated regional Grade 2 enrolment by gender. Together with the survey design variables, these weights should be used to produce nationally representative estimates.</p>
+          <p style="font-size:1rem; line-height:1.7; color:#374151; margin:0 0 1rem;">The Tanzania National EGRA-EGMA-SSME employed a four-stage stratified cluster sampling design and were designed to produce estimates of Grade 2 learning outcomes that are representative of mainland Tanzania; Zanzibar was not included in the sampling frame. In the first stage, 20 local government councils were selected with probability proportional to the number of schools after stratification by urban and rural location. In the second stage, 200 schools were selected within sampled councils, stratified into high-, medium-, and low-performing categories based on 2012 Primary School Leaving Examination results and sampled with probability proportional to Grade 2 enrolment. In the third stage, one Grade 2 classroom and its teacher were randomly selected within each sampled school. In the fourth stage, approximately 10–14 Grade 2 pupils (five to seven boys and five to seven girls) were randomly selected from the sampled classroom following gender stratification. The harmonized dataset contains 2,266 Grade 2 pupil records. Final pupil weights (`wt_final`) incorporate the probabilities of selection and were calibrated to estimated regional Grade 2 enrolment by gender. Together with the survey design variables, these weights should be used to produce estimates representative of mainland Tanzania, not of Tanzania as a whole.</p>
           <h2 class="af-section-title">Survey design (svyset)</h2>
           <div>
             <div class="af-code-tabs">
@@ -502,7 +502,7 @@ linked &lt;- study_round |&gt;
       </aside>
     </div>
     <div class="af-footer">
-      <strong>AHEAD — African Harmonised Early-Grade Assessments Data</strong>
+      <strong>AHEAD — African Harmonised Early-Grade Assessment Data</strong>
        · DataFirst, University of Cape Town
     </div>
     <script>
